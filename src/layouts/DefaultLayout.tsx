@@ -10,9 +10,10 @@ const DefaultLayout = () => {
       <main>
         <Outlet/>
       </main>
-      <CustomButton variant="primary">Primario</CustomButton>
-      <CustomButton variant="alert">Alerta</CustomButton>
-      <CustomButton variant="warning">Advertencia</CustomButton>
+      <CustomButton variant="primary" route='/services' >Ir a servicios</CustomButton>
+      <CustomButton variant="alert" onClick={() => alert("Hola")}>Alerta</CustomButton>
+      <CustomButton variant="warning">Cancelar</CustomButton>
+      <CustomButton disabled>Deshabilitado</CustomButton>
     </div>
   )
 }
