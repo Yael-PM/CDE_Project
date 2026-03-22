@@ -1,12 +1,15 @@
-import React from 'react'
+import React from 'react';
 import { useNavigate } from 'react-router-dom';
 
 interface CustomButtonProps {
-  variant?: "primary" | "alert" | "warning";
+  // Añadimos "none" a las opciones
+  variant?: "primary" | "alert" | "warning" | "none"; 
   children: React.ReactNode;
   route?: string;
   onClick?: () => void;
   disabled?: boolean;
+  // Nueva prop para estilos externos
+  className?: string; 
 }
 
 const CustomButton = ({
@@ -15,48 +18,47 @@ const CustomButton = ({
     route,
     onClick,
     disabled = false,
+    className = "", // Valor por defecto vacío
     }: CustomButtonProps) => {
     
     const navigate = useNavigate();
     
-
-    //estilos para los estados de los botones
-    const baseStyles = 'mx-5 p-1 font-semibold rounded-2xl transition transform';
+    // Estilos base
+    const baseStyles = 'mx-5 px-4 py-2 font-semibold rounded-lg transition transform';
     const enabledStyles = 'hover:scale-105 cursor-pointer';
-    const disabledStyles = 'cursor-not-allowed text-gray-400';
+    const disabledStyles = 'cursor-not-allowed opacity-50 grayscale'; // Mejoramos el feedback visual de deshabilitado
 
     const variants = {
-        primary: 'bg-blue-600 hover:bg-blue-700 text-white',
-        alert: 'bg-yellow-600 hover:bg-yellow-700',
-        warning: 'bg-red-600 hover:bg-red-700'
+        primary: 'bg-tertiary-500 hover:bg-primary-600 text-white',
+        alert: 'bg-primary-500 text-white',
+        warning: 'bg-secondary-500 text-white',
+        none: "" // Variante limpia para control total externo
     };
 
-    //Funcion que nos dice como manejar la interaccion del usuario
     const handleClick = () => {
         if (disabled) return;
-
         if (route) {
             navigate(route);
-        }else if(onClick){
+        } else if (onClick) {
             onClick();
         }
-    }
+    };
   
     return (
-    <div className='p-0.5'>
         <button 
-        onClick={handleClick}
-        disabled = {disabled}
-        className= 
-            {`${baseStyles} 
-              ${disabled ? disabledStyles : enabledStyles}
-              ${disabled ? 'hover:none' : ''};
-              ${variants[variant]}
-              `}>
+            type="button" // Buena práctica para evitar envíos de formularios accidentales
+            onClick={handleClick}
+            disabled={disabled}
+            className={`
+                ${variant !== 'none' ? baseStyles : ''} 
+                ${disabled ? disabledStyles : enabledStyles}
+                ${variants[variant]}
+                ${className}
+            `.trim()} 
+        >
             {children}
         </button>
-    </div>
-  )
-}
+    );
+};
 
-export default CustomButton
+export default CustomButton;

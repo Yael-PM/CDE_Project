@@ -2,6 +2,9 @@ import React from 'react'
 import { Link } from 'react-router-dom'
 import { useTranslation } from 'react-i18next'
 
+import Logo from '/CDE Simple Logo.png'
+import CustomButton from './CustomButton'
+
 const NavBar = () => {
   const { t, i18n } = useTranslation();
 
@@ -12,11 +15,13 @@ const NavBar = () => {
   };
 
   return (
-    <div className='flex justify-between items-center p-5'>
-        <div className='text-4xl font-semibold cursor-pointer mx-5'>CDE</div>
+    <div className='flex justify-between items-center p-5 border-b border-gray-200'>
+        <div className='w-25 '>
+          <img src={Logo} alt="CDE Logo" />
+        </div>
         
         <div>
-            <ul className='flex gap-4 [&>li]:cursor-pointer [&>li]:hover:scale-105 items-center'>
+            <ul className='flex gap-6 [&>li]:cursor-pointer [&>li]:hover:scale-105 [&>li]:hover:underline [&>li]:hover:text-tertiary-500  items-center'>
                 <li><Link to={'/'}>{t('navbar.home')}</Link></li>
                 <li><Link to={'/services'}>{t('navbar.services')}</Link></li>
                 <li>{t('navbar.about-us')}</li>
@@ -25,16 +30,20 @@ const NavBar = () => {
             </ul>
         </div>
 
-        <div className=''>
-            <button className='mx-5 bg-pollito-600 p-2 rounded-2xl text-white cursor-pointer'>
-              {t('navbar.btn-contact')}
-            </button>
-            <button 
-                onClick={toggleLanguage}
-                className='px-3 py-1 border border-gray-300 rounded-lg hover:bg-gray-100 transition-colors uppercase text-sm font-bold'
+        <div className='flex'>
+            <CustomButton
+              route="/contact"
             >
-                {i18n.language === 'es' ? '🇬🇧 EN' : '🇪🇸 ES'}
-            </button>
+              {t('navbar.btn-contact')}
+            </CustomButton>
+            <CustomButton
+              onClick={toggleLanguage}
+              variant="none"
+              className='px-3 py-1 border border-gray-300 rounded-lg hover:bg-gray-100 transition-colors uppercase text-sm font-bold'
+
+            >
+              {i18n.language === 'es' ? '🇬🇧 EN' : '🇪🇸 ES'}
+            </CustomButton>
         </div>
     </div>
   )

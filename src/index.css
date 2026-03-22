@@ -2,6 +2,40 @@
 
 @theme {
     --font-family:'Montserrat';
-    --color-pollito-500: #38bdf8;
-    --color-pollito-600: #d83434;
+    
+    --color-primary-600: #089bdc;
+    --color-primary-500: #FACC15;
+    --color-primary-400: #fbd53c;
+    --color-primary-300: #fcdd63;
+    --color-primary-200: #fde68a;
+    --color-primary-100: #fdeeb1;
+    --color-primary-50: #fef7d8;
+    
+    --color-secondary-500: #D83434;
+    --color-secondary-400: #df5656;
+    --color-secondary-300: #e57878;
+    --color-secondary-200: #eb9a9a;
+    --color-secondary-100: #f2bbbb;
+    --color-secondary-50: #f9dddd;
+
+    --color-tertiary-500: #38BDF8;
+    --color-tertiary-400: #59c8f9;
+    --color-tertiary-300: #7ad3fa;
+    --color-tertiary-200: #9bdefc;
+    --color-tertiary-100: #c1e4fa;
+    --color-tertiary-50: #e6f7fd;
+
+    --color-fourth-500: #0B1F33;
+    --color-fourth-400: #184470;
+    --color-fourth-300: #256aae;
+    --color-fourth-200: #478fd7;
+    
+    --color-neutral-500: #F3F0EB;
+    --color-neutral-400: #f5f3ee;
+    --color-neutral-300: #f7f5f2;
+    --color-neutral-200: #f9f8f5;
+
+    --color-error-500: #EC1313;
+
+    --color-success-500: #05DA12;
 }
