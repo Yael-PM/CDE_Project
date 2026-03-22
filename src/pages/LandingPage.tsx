@@ -14,7 +14,7 @@ const LandingPage = () => {
     <div>
         <h1> Landing Page</h1>
 
-        <div className='grid grid-cols-1 md:grid-cols-3 gap-6 mt-10 px-5'>
+        <div className='grid grid-cols-1 md:grid-cols-3 gap-6 mt-10 px-5 max-w-7xl mx-auto'>
           <ServiceCard 
             title={t('landing-page.service-component1-title')}
             description={t('landing-page.service-component1-description')}
