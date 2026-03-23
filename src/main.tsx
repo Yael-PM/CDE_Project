@@ -10,6 +10,7 @@ import DefaultLayout from './layouts/DefaultLayout'
 //Pages
 import LandingPage from './pages/LandingPage'
 import Services from './pages/Services'
+import AboutUs from './pages/AboutUs'
 import Contact from './pages/Contact'
 
 const router = createBrowserRouter([
@@ -19,6 +20,7 @@ const router = createBrowserRouter([
     children: [
       {index: true, element: <LandingPage/>},
       {path: '/services', element: <Services/>},
+      {path: '/about-us', element: <AboutUs/>},
       {path: '/contact', element: <Contact/>}
     ]
   }
