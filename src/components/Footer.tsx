@@ -24,7 +24,7 @@ const Footer = () => {
             <div className='flex flex-col'>
                 <p className='py-1 text-2xl text-tertiary-400 font-bold text-footer-widgets'> {t('footer.enterprise')} </p>
                 <p className='hover:text-fourth-200 py-1'><Link to={'/about-us'}>{t('footer.about-us')}</Link></p>
-                {}
+                {/* link to /services remaining */}
                 <p className='hover:text-fourth-200 py-1'><Link to={'/'}>{t('footer.services')}</Link></p>
             </div>
 
