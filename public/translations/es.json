@@ -25,7 +25,8 @@
         "sanitary-registers": "Registros Sanitarios"
     },
     "landing-page": {
-        "banner-title": "Proteja su empresa con cumplimiento total",
+        "flotant-text": "Expertos en regulación sanitaria",
+        "banner-title": "Proteja su empresa con <span>cumplimiento total</span>",
         "banner-description": "Asesoría especializada en trámites, certificaciones y desarrollo empresarial. Garantice la operatividad de su negocio sin riesgos legales.",
         "btn-services": "Ver Servicios",
         "btn-contact": "Contáctanos",
