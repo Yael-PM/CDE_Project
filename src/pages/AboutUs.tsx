@@ -92,7 +92,7 @@ const AboutUs = () => {
             title= { t('about-us.call-to-action-title')}
             description= { t('about-us.call-to-action-description')}
             color='tertiary'
-            type='button'
+            type='link'
             icon
           />
 
