@@ -29,7 +29,7 @@ const NavBar = () => {
             <ul className='flex gap-6 [&>li]:cursor-pointer [&>li]:hover:scale-105 [&>li]:hover:underline [&>li]:hover:text-tertiary-500 items-center'>
                 <li><Link to={'/'}>{t('navbar.home')}</Link></li>
                 <li><Link to={'/services'}>{t('navbar.services')}</Link></li>
-                <li>{t('navbar.about-us')}</li>
+                <li><Link to={'/about-us'}>{t('navbar.about-us')}</Link></li>
                 <li>{t('navbar.blog')}</li>
                 <li><Link to={'/contact'}>{t('navbar.contact')}</Link></li>
             </ul>
