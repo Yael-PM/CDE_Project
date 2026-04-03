@@ -106,7 +106,8 @@
         "form-btn": "Enviar Mensaje"
     },
     "services": {
-        "title": "Impulse su negocio con certeza regulatoria",
+        "flotant-text": "Soluciones Empresariales",
+        "title": "Impulse su negocio con <span>certeza regulatoria</span>",
         "description": "Convertimos la complejidad legal en una ventaja competitiva. Asesoría experta en regulación, cumplimiento y certificaciones.",
         "btn-about": "Conócenos",
         "our-services": "Nuestros Servicios Especializados",

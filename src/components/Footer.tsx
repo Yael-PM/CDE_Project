@@ -1,10 +1,9 @@
-import React from 'react'
 import { Link } from 'react-router-dom'
 import { useTranslation } from 'react-i18next'
 import { FaPhone } from "react-icons/fa6";
 import { MdEmail } from "react-icons/md";
 
-import Logo from '../../public/CDE Grupo Legislación.png'
+import Logo from '/CDE Grupo Legislación.png'
 
 const Footer = () => {
 

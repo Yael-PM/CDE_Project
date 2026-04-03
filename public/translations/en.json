@@ -106,7 +106,8 @@
         "form-btn": "Send Message"
     },
     "services": {
-        "title": "Boost Your Business with Regulatory Certainty",
+        "flotant-text": "Business Solutions",
+        "title": "Boost Your Business with <span>Regulatory Certainty</span>",
         "description": "We turn legal complexity into a competitive advantage. Expert advice on regulation, compliance, and certifications.",
         "btn-about": "Learn More About Us",
         "our-services": "Our Specialized Services",

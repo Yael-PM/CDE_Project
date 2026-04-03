@@ -1,7 +1,6 @@
-import React from 'react'
 import { useTranslation } from 'react-i18next'
-import banerBg from '../../public/aboutUsBanerBg.jpg'
-import descriptionImg from '../../public/aboutUsDescription.jpg'
+import banerBg from '/aboutUsBanerBg.jpg'
+import descriptionImg from '/aboutUsDescription.jpg'
 import ServiceCard from '../components/ServiceCard'
 
 import { FaFlag } from "react-icons/fa6";
