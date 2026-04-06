@@ -20,15 +20,27 @@ const AboutUs = () => {
         style={{ backgroundImage: `url(${banerBg})` }}
         className="relative w-full h-[60vh] md:h-screen bg-cover bg-center flex flex-col justify-center items-center px-6 md:px-20"
       >
+        {/* Overlay — z-0, DEBAJO del contenido */}
         <div className="absolute inset-0 bg-white/60 md:bg-linear-to-b md:from-white/80 md:to-white/40 z-0" />
-        <div className="relative z-10 max-w-3xl text-center">
-          <h1 className="text-3xl md:text-5xl font-extrabold text-slate-900 leading-tight mb-4">
+
+        {/* Contenido — z-10, ENCIMA del overlay */}
+        <div className="relative z-10 max-w-3xl text-center flex flex-col items-center">
+
+          {/* Badge */}
+          <div className="flex items-center gap-2 bg-gradient-to-b from-[#fdeeee] to-[#f9dada] px-4 py-1.5 rounded-full w-fit mb-6 border border-red-400/50 shadow-[2px_2px_5px_rgba(0,0,0,0.3)]">
+            <span className="w-2.5 h-2.5 bg-[#d32f2f] rounded-full"></span>
+            <span className="text-xs font-[800] text-black uppercase tracking-wider">
+              {t('about-us.flotant-text')}
+            </span>
+          </div>
+
+          <p className="text-4xl md:text-5xl font-extrabold text-slate-900 leading-tight mb-4">
             {arrBanerTitle.map((part, i) =>
               i % 2 === 1
                 ? <span key={i} className="text-secondary-500">{part}</span>
                 : part
             )}
-          </h1>
+          </p>
           <p className="text-base md:text-lg text-slate-600 max-w-xl mx-auto">
             {t('about-us.baner-description')}
           </p>
