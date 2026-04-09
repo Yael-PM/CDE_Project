@@ -103,7 +103,7 @@
         "form-affair": "Asunto",
         "form-message": "Mensaje",
         "form-message-placeholder": "Describa brevemente cómo podemos ayudarle...",
-        "form-privacy": "He leído y acepto la Política de Privacidad. Entiendo que mis datos serán tratados de forma confidencial",
+        "form-privacy": "He leído y acepto la |Política de Privacidad|. Entiendo que mis datos serán tratados de forma confidencial",
         "form-btn": "Enviar Mensaje"
     },
     "services": {

@@ -103,7 +103,7 @@
         "form-affair": "Subject",
         "form-message": "Message",
         "form-message-placeholder": "Briefly describe how we can help you...",
-        "form-privacy": "I have read and accept the Privacy Policy. I understand that my data will be treated confidentially.",
+        "form-privacy": "I have read and accept the |Privacy Policy|. I understand that my data will be treated confidentially.",
         "form-btn": "Send Message"
     },
     "services": {
