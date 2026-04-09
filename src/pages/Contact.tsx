@@ -1,16 +1,21 @@
 import { useTranslation } from "react-i18next"
 import { Link } from 'react-router-dom'
 
-import ServiceCard from "../components/ServiceCard";
 import CustomButton from "../components/CustomButton";
-import { LuShieldCheck } from "react-icons/lu";
+
+import { FaPhoneSquareAlt } from "react-icons/fa";
 import { IoMdSend } from "react-icons/io";
+import { MdEmail } from "react-icons/md";
+import { RiShieldCheckLine } from "react-icons/ri";
 
 const Contact = () => {
   const { t } = useTranslation();
 
   const contactFormPrivacy = t('contact.form-privacy');
   const arrFormPrivacy = contactFormPrivacy.split('|');
+
+  const contactPrivacyDescription = t('contact.component-privacy-description');
+  const arrPrivacyDescription = contactPrivacyDescription.split('|');
 
   return (
     // min-h-screen aquí asegura que el fondo cubra todo y el footer baje
@@ -32,19 +37,75 @@ const Contact = () => {
 
         {/* Columna de Cards */}
         <div className="space-y-6">
-          <ServiceCard
-            title={t('contact.component-contact-title')}
-            description={t('contact.component-contact-call')}
-            type="none"
-            icon
-          />
-          <ServiceCard
-            title={t('contact.component-privacy-title')}
-            description={t('contact.component-privacy-description')}
-            extraStyles="!bg-fourth-400" // El ! asegura que gane al bg-white
-            type="none"
-            icon={<LuShieldCheck />}
-          />
+          {/* card  */}
+          <div className="flex flex-col h-full border border-gray-200 rounded-2xl p-6 shadow-sm hover:shadow-lg transition-all bg-white items-start">
+            <h3 className="text-2xl font-bold mb-3 text-gray-900 leading-tight">
+              {t('contact.component-contact-title')}
+            </h3>
+
+            {/* contact call container */}
+            <div className="flex items-start gap-4">
+              {/* Contenedor del Icono */}
+              <div className="w-14 h-14 flex items-center justify-center rounded-xl mb-6">
+                <FaPhoneSquareAlt className="text-5xl text-tertiary-500"/>
+              </div>
+              {/* Contenedor texto */}
+              <div>
+                {/* Texto - Alineación natural a la izquierda */}
+                <p className="font-semibold leading-relaxed text-left">
+                  {t('contact.component-contact-call')}
+                </p>
+                <p className="text-gray-500 leading-relaxed mb-1 text-left">
+                  +52 (55) 1234-5678
+                </p>
+                <p className="text-secondary-500">
+                  {t('contact.component-contact-call-prioritary')}
+                </p>
+              </div>
+            </div>
+
+            {/* Contact email container */}
+            <div className="mt-5 flex items-start gap-4">
+              {/* Contenedor del Icono */}
+              <div className="w-14 h-14 flex items-center justify-center rounded-xl mb-6">
+                <MdEmail className="text-5xl text-tertiary-500"/>
+              </div>
+              {/* Contenedor texto */}
+              <div>
+                {/* Texto - Alineación natural a la izquierda */}
+                <p className="font-semibold leading-relaxed text-left">
+                  {t('contact.component-contact-email')}
+                </p>
+                <p className="text-gray-500 leading-relaxed mb-1 text-left">
+                  contacto@cdeconsultores.com
+                </p>
+              </div>
+            </div>
+
+            {/* Espaciador */}
+            <div className="grow"></div>
+          </div>
+
+          {/* card */}
+          <div className="flex flex-col h-full border rounded-2xl p-6 shadow-sm hover:shadow-lg transition-all bg-fourth-500 items-start">
+            {/* Contenedor del Icono */}
+            <div className="w-14 h-14 flex items-center justify-center rounded-xl mb-6">
+              <RiShieldCheckLine className="text-5xl text-primary-500"/>
+            </div>
+            
+            <h3 className="text-2xl font-bold mb-3 text-white leading-tight">
+              {t('contact.component-privacy-title')}
+            </h3>
+            <p className="leading-relaxed mb-1 text-left">
+              {arrPrivacyDescription.map((part,i) =>
+              i % 2 === 1
+                ? <span key={i} className="text-primary-500 font-semibold">{part}</span>
+                : <span key={i} className="text-gray-500 font-medium">{part}</span>
+              )}
+            </p>
+            {/* Espaciador */}
+            <div className="grow"></div>
+          </div>
         </div>
 
         {/* Columna de Formulario */}
@@ -109,14 +170,14 @@ const Contact = () => {
                   />
                 </div>
                 <label htmlFor="privacy" className="text-sm text-slate-600 cursor-pointer select-none after:content-['*'] after:ml-0.5 after:text-red-500">
-                  {arrFormPrivacy.map((part,i) =>
-                  i % 2 === 1
-                    ? <span key={i} className="text-tertiary-500 font-semibold"><Link to='/privacy-policy' target="_blank">{part}</Link></span>
-                    : part
+                  {arrFormPrivacy.map((part, i) =>
+                    i % 2 === 1
+                      ? <span key={i} className="text-tertiary-500 font-semibold"><Link to='/privacy-policy' target="_blank">{part}</Link></span>
+                      : part
                   )}
                 </label>
               </div>
-              
+
               <div className="flex justify-center mt-5">
                 <CustomButton
                   variant="primary"
