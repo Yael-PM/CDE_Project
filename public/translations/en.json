@@ -101,6 +101,7 @@
         "form-position": "Position",
         "form-position-placeholder": "E.g. Supervisor",
         "form-affair": "Subject",
+        "form-affair-option-default": "Select an option",
         "form-message": "Message",
         "form-message-placeholder": "Briefly describe how we can help you...",
         "form-privacy": "I have read and accept the |Privacy Policy|. I understand that my data will be treated confidentially.",

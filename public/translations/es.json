@@ -101,6 +101,7 @@
         "form-position": "Cargo o Posición",
         "form-position-placeholder": "Ej. Supervisor",
         "form-affair": "Asunto",
+        "form-affair-option-default": "Seleccione una opción",
         "form-message": "Mensaje",
         "form-message-placeholder": "Describa brevemente cómo podemos ayudarle...",
         "form-privacy": "He leído y acepto la |Política de Privacidad|. Entiendo que mis datos serán tratados de forma confidencial",
