@@ -12,6 +12,7 @@ import LandingPage from './pages/LandingPage'
 import Services from './pages/Services'
 import AboutUs from './pages/AboutUs'
 import Contact from './pages/Contact'
+import ManageNotes from './pages/ManageNotes'
 
 const router = createBrowserRouter([
   {
@@ -21,7 +22,8 @@ const router = createBrowserRouter([
       {index: true, element: <LandingPage/>},
       {path: '/services', element: <Services/>},
       {path: '/about-us', element: <AboutUs/>},
-      {path: '/contact', element: <Contact/>}
+      {path: '/contact', element: <Contact/>},
+      {path: '/manage-notes',element: <ManageNotes/>}
     ]
   }
 ])
