@@ -141,11 +141,26 @@ const Contact = () => {
                   <input className="w-full px-4 py-3 rounded-xl border bg-neutral-200 border-neutral-300 focus:border-blue-500 outline-none transition-all" type="tel" id="phone" name="phone" placeholder={t('contact.form-email-placeholder')} />
                 </div>
               </div>
+              
+              {/* Position */}
+              <div className="flex flex-col justify-center">
+                  <label className="flex justify-center mt-5 text-sm font-bold mb-1.5 after:content-['*'] after:ml-0.5 after:text-red-500" htmlFor='position'>{t('contact.form-position')}</label>
+                  <input className="mx-15 px-4 py-3 rounded-xl border bg-neutral-200 border-neutral-300 focus:border-blue-500 outline-none transition-all" type="tex" id="position" name="position" placeholder={t('contact.form-position-placeholder')} />
+              </div>
 
               {/* Campos de ancho completo */}
               <div className="flex flex-col mt-4">
                 <label className="text-sm font-bold mb-1.5 after:content-['*'] after:ml-0.5 after:text-red-500" htmlFor="affair">{t('contact.form-affair')}</label>
-                <select className="w-full px-4 py-3 rounded-xl border bg-neutral-200 border-neutral-300 focus:border-blue-500 outline-none transition-all resize-none" id="affair" name="affair" required />
+                <select className="w-full px-4 py-3 rounded-xl border bg-neutral-200 border-neutral-300 focus:border-blue-500 outline-none transition-all resize-none" id="affair" name="affair" required>
+                  <option value=''> {t('contact.form-affair-option-default')} </option>
+                  <option value=''> { t('services.component-service-1-title')} </option>
+                  <option value=''> { t('services.component-service-2-title')} </option>
+                  <option value=''> { t('services.component-service-3-title')} </option>
+                  <option value=''> { t('services.component-service-4-title')} </option>
+                  <option value=''> { t('services.component-service-5-title')} </option>
+                  <option value=''> { t('services.component-service-6-title')} </option>
+                  <option value=''> { t('services.component-service-7-title')} </option>
+                </select>
               </div>
               <div className="flex flex-col mt-4">
                 <label className="text-sm font-bold mb-1.5 after:content-['*'] after:ml-0.5 after:text-red-500 " htmlFor="message">{t('contact.form-message')}</label>
