@@ -20,7 +20,7 @@
         "sanitary-legislation": "Legislación Sanitaria",
         "notices-and-authorizations": "Avisos y Autorizaciones",
         "certifications": "Certificaciones",
-        "capacitacion": "Capacitación Emperesarial y de Asociaciones",
+        "capacitacion": "Capacitación Empresarial y de Asociaciones",
         "auditories": "Auditorías",
         "sanitary-registers": "Registros Sanitarios",
         "rights": "@2026 CDE Consultores. Todos los derechos reservados.",
@@ -64,6 +64,7 @@
         "read-more": "Saber más"
     },
     "about-us": {
+        "flotant-text": "Soluciones Empresariales",
         "baner-title": "Somos aliados estratégicos para el |cumplimiento| regulatorio de su empresa",
         "baner-description": "Para el cumplimiento de la regulación, impulsamos el éxito de sus proyectos mediante un enfoque estratégico que transforma las obligaciones normativas en una ventaja competitiva y respalda cada decisión con inversiones seguras.",
         "our-history-title": "Nuestra Historia",
@@ -87,7 +88,7 @@
         "component-contact-call-prioritary": "Línea prioritaria",
         "component-contact-email": "Escríbenos",
         "component-privacy-title": "Compromiso CDE",
-        "component-privacy-description": "Garantizamos confidencialidad absoluta en todos sus trámites y procesos regulatorios. Su empresa está en manos expertas.",
+        "component-privacy-description": "Garantizamos |confidencialidad absoluta| en todos sus trámites y procesos regulatorios. Su empresa está en manos expertas.",
         "form-title": "Envíanos un mensaje",
         "form-name": "Nombre Completo",
         "form-name-placeholder": "Ej. Juan Pérez",
@@ -100,9 +101,10 @@
         "form-position": "Cargo o Posición",
         "form-position-placeholder": "Ej. Supervisor",
         "form-affair": "Asunto",
+        "form-affair-option-default": "Seleccione una opción",
         "form-message": "Mensaje",
         "form-message-placeholder": "Describa brevemente cómo podemos ayudarle...",
-        "form-privacy": "He leído y acepto la Política de Privacidad. Entiendo que mis datos serán tratados de forma confidencial",
+        "form-privacy": "He leído y acepto la |Política de Privacidad|. Entiendo que mis datos serán tratados de forma confidencial",
         "form-btn": "Enviar Mensaje"
     },
     "services": {
