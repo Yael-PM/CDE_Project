@@ -64,6 +64,7 @@
         "read-more": "Learn More"
     },
     "about-us": {
+        "flotant-text": "Business Solutions", 
         "baner-title": "We are strategic allies for your company's regulatory |compliance|",
         "baner-description": "For regulatory compliance, we drive the success of your projects through a strategic approach that transforms regulatory obligations into a competitive advantage and supports every decision with secure investments.",
         "our-history-title": "Our History",
@@ -87,7 +88,7 @@
         "component-contact-call-prioritary": "Priority Line",
         "component-contact-email": "Write to Us",
         "component-privacy-title": "CDE Commitment",
-        "component-privacy-description": "We guarantee absolute confidentiality in all your regulatory procedures and processes. Your company is in expert hands.",
+        "component-privacy-description": "We guarantee |absolute confidentiality| in all your regulatory procedures and processes. Your company is in expert hands.",
         "form-title": "Send Us a Message",
         "form-name": "Full Name",
         "form-name-placeholder": "E.g. John Doe",
@@ -100,9 +101,10 @@
         "form-position": "Position",
         "form-position-placeholder": "E.g. Supervisor",
         "form-affair": "Subject",
+        "form-affair-option-default": "Select an option",
         "form-message": "Message",
         "form-message-placeholder": "Briefly describe how we can help you...",
-        "form-privacy": "I have read and accept the Privacy Policy. I understand that my data will be treated confidentially.",
+        "form-privacy": "I have read and accept the |Privacy Policy|. I understand that my data will be treated confidentially.",
         "form-btn": "Send Message"
     },
     "services": {

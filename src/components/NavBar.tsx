@@ -1,4 +1,4 @@
-import React, { useState } from 'react' // Importamos useState
+import { useState } from 'react' // Importamos useState
 import { Link } from 'react-router-dom'
 import { useTranslation } from 'react-i18next'
 import { LuMenu, LuX } from "react-icons/lu"; // Usando Lucide para los iconos
@@ -30,7 +30,7 @@ const NavBar = () => {
                 <li><Link to={'/'}>{t('navbar.home')}</Link></li>
                 <li><Link to={'/services'}>{t('navbar.services')}</Link></li>
                 <li><Link to={'/about-us'}>{t('navbar.about-us')}</Link></li>
-                <li>{t('navbar.blog')}</li>
+                <li><Link to={'/blog'}> {t('navbar.blog')} </Link></li>
                 <li><Link to={'/contact'}>{t('navbar.contact')}</Link></li>
             </ul>
         </div>
