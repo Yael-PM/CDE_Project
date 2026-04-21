@@ -22,10 +22,14 @@
         "certifications": "Certificaciones",
         "capacitacion": "Capacitación Emperesarial y de Asociaciones",
         "auditories": "Auditorías",
-        "sanitary-registers": "Registros Sanitarios"
+        "sanitary-registers": "Registros Sanitarios",
+        "rights": "@2026 CDE Consultores. Todos los derechos reservados.",
+        "terms": "Términos y Condiciones",
+        "privacy": "Avisos de privacidad"
     },
     "landing-page": {
-        "banner-title": "Proteja su empresa con cumplimiento total",
+        "flotant-text": "Expertos en regulación sanitaria",
+        "banner-title": "Proteja su empresa con <span>cumplimiento total</span>",
         "banner-description": "Asesoría especializada en trámites, certificaciones y desarrollo empresarial. Garantice la operatividad de su negocio sin riesgos legales.",
         "btn-services": "Ver Servicios",
         "btn-contact": "Contáctanos",
@@ -60,10 +64,10 @@
         "read-more": "Saber más"
     },
     "about-us": {
-        "baner-title": "Somos aliados estratégicos para el cumplimiento regulatorio de su empresa",
+        "baner-title": "Somos aliados estratégicos para el |cumplimiento| regulatorio de su empresa",
         "baner-description": "Para el cumplimiento de la regulación, impulsamos el éxito de sus proyectos mediante un enfoque estratégico que transforma las obligaciones normativas en una ventaja competitiva y respalda cada decisión con inversiones seguras.",
         "our-history-title": "Nuestra Historia",
-        "our-history-subtitle": "Más de una década construyendo confianza regulatoria",
+        "our-history-subtitle": "Más de una década construyendo |confianza regulatoria|",
         "our-history-description": "CDE Consultores nació a partir de la experiencia directa en regulación sanitaria y de una necesidad clara en el sector: contar con asesoría experta y estratégica que permita cumplir con la normativa sin frenar el crecimiento del negocio. Fundada por ex-funcionarios de COFEPRIS y especialistas legales, la firma comprende los procesos regulatorios y acompaña a las empresas para prevenir riesgos, evitar retrasos y operar con seguridad. A lo largo de los años, hemos acompañado a empresas nacionales e internacionales de los sectores farmacéutico, dispositivos médicos, alimentos, productos cosméticos y suplementos alimenticios en la obtención de registros sanitarios, licencias sanitarias, certificaciones, capacitaciones y procesos de importación y exportación, convirtiéndonos en un aliado confiable para operar en México con certeza y cumplimiento.",
         "corporate-values-title": "Filosofía Corporativa",
         "corporate-values-description": "Nuestros conocimientos cada paso que damos junto a nuestros clientes.",
@@ -102,7 +106,8 @@
         "form-btn": "Enviar Mensaje"
     },
     "services": {
-        "title": "Impulse su negocio con certeza regulatoria",
+        "flotant-text": "Soluciones Empresariales",
+        "title": "Impulse su negocio con <span>certeza regulatoria</span>",
         "description": "Convertimos la complejidad legal en una ventaja competitiva. Asesoría experta en regulación, cumplimiento y certificaciones.",
         "btn-about": "Conócenos",
         "our-services": "Nuestros Servicios Especializados",

@@ -22,10 +22,14 @@
         "certifications": "Certifications",
         "capacitacion": "Business and Association Training",
         "auditories": "Audits",
-        "sanitary-registers": "Sanitary Registrations"
+        "sanitary-registers": "Sanitary Registrations",
+        "rights": "@2026 CDE Consultores. All rights reserved.",
+        "terms": "Terms and Conditions",
+        "privacy": "Privacy Notice"
     },
     "landing-page": {
-        "banner-title": "Protect Your Business with Total Compliance",
+        "flotant-text": "Experts in sanitary regulation",
+        "banner-title": "Protect Your Business with <span>Total Compliance</span>",
         "banner-description": "Specialized advice on procedures, certifications, and business development. Ensure the operability of your business without legal risks.",
         "btn-services": "View Services",
         "btn-contact": "Contact Us",
@@ -60,10 +64,10 @@
         "read-more": "Learn More"
     },
     "about-us": {
-        "baner-title": "We are strategic allies for your company's regulatory compliance",
+        "baner-title": "We are strategic allies for your company's regulatory |compliance|",
         "baner-description": "For regulatory compliance, we drive the success of your projects through a strategic approach that transforms regulatory obligations into a competitive advantage and supports every decision with secure investments.",
         "our-history-title": "Our History",
-        "our-history-subtitle": "More than a decade building regulatory trust",
+        "our-history-subtitle": "More than a decade building |regulatory trust|",
         "our-history-description": "CDE Consultores was born from direct experience in health regulation and a clear need in the sector: to have expert and strategic advice that allows compliance with regulations without hindering business growth. Founded by former COFEPRIS officials and legal specialists, the firm understands regulatory processes and accompanies companies to prevent risks, avoid delays, and operate safely. Over the years, we have supported national and international companies in the pharmaceutical, medical device, food, cosmetic, and dietary supplement sectors in obtaining health registrations, health licenses, certifications, training, and import and export processes, becoming a reliable ally for operating in Mexico with certainty and compliance.",
         "corporate-values-title": "Corporate Philosophy",
         "corporate-values-description": "Our knowledge guides every step we take alongside our clients.",
@@ -102,7 +106,8 @@
         "form-btn": "Send Message"
     },
     "services": {
-        "title": "Boost Your Business with Regulatory Certainty",
+        "flotant-text": "Business Solutions",
+        "title": "Boost Your Business with <span>Regulatory Certainty</span>",
         "description": "We turn legal complexity into a competitive advantage. Expert advice on regulation, compliance, and certifications.",
         "btn-about": "Learn More About Us",
         "our-services": "Our Specialized Services",
