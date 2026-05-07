@@ -19,5 +19,6 @@ export const env = {
   MAILGUN_API_KEY: process.env.MAILGUN_API_KEY || '',
   MAILGUN_DOMAIN: process.env.MAILGUN_DOMAIN || '',
   MAILGUN_FROM: process.env.MAILGUN_FROM || '',
-  CONTACT_TO_EMAIL: process.env.CONTACT_TO_EMAIL || ''
+  CONTACT_TO_EMAIL: process.env.CONTACT_TO_EMAIL || '',
+  MAILGUN_REGION: process.env.MAILGUN_REGION || 'US'
 };

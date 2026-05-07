@@ -2,6 +2,10 @@ import { Request, Response } from 'express';
 import { mg } from '../../config/mailgun';
 import { env } from '../../config/env';
 
+const isValidEmail = (email: string) => {
+  return /^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(email);
+};
+
 export const sendContactMessage = async (req: Request, res: Response) => {
   try {
     const fullName = String(req.body.fullName || '').trim();
@@ -14,43 +18,72 @@ export const sendContactMessage = async (req: Request, res: Response) => {
     const privacyAccepted = Boolean(req.body.privacyAccepted);
 
     if (!fullName || !company || !corporateEmail || !position || !subject || !message) {
-      return res.status(400).json({ message: 'Faltan campos obligatorios' });
+      return res.status(400).json({
+        message: 'Faltan campos obligatorios'
+      });
+    }
+
+    if (!isValidEmail(corporateEmail)) {
+      return res.status(400).json({
+        message: 'El correo electrónico no es válido'
+      });
     }
 
     if (!privacyAccepted) {
-      return res.status(400).json({ message: 'Debes aceptar la política de privacidad' });
+      return res.status(400).json({
+        message: 'Debes aceptar la política de privacidad'
+      });
     }
 
-    await mg.messages.create(env.MAILGUN_DOMAIN, {
+    const emailData = {
       from: env.MAILGUN_FROM,
       to: [env.CONTACT_TO_EMAIL],
-      subject: `[Formulario CDE] ${subject}`,
+      subject: `[CDE Contact Us] ${subject}`,
       text: `
+Nuevo mensaje desde el formulario de contacto
+
 Nombre: ${fullName}
 Empresa: ${company}
-Correo: ${corporateEmail}
+Correo corporativo: ${corporateEmail}
 Teléfono: ${phone}
-Cargo: ${position}
+Puesto: ${position}
 
 Mensaje:
 ${message}
-      `,
+      `.trim(),
       html: `
-        <h2>Nuevo mensaje desde el formulario de contacto</h2>
-        <p><strong>Nombre:</strong> ${fullName}</p>
-        <p><strong>Empresa:</strong> ${company}</p>
-        <p><strong>Correo:</strong> ${corporateEmail}</p>
-        <p><strong>Teléfono:</strong> ${phone}</p>
-        <p><strong>Cargo:</strong> ${position}</p>
-        <p><strong>Asunto:</strong> ${subject}</p>
-        <p><strong>Mensaje:</strong><br/>${message.replace(/\n/g, '<br/>')}</p>
+        <div style="font-family: Arial, sans-serif; line-height: 1.6;">
+          <h2>Nuevo mensaje desde Contact Us</h2>
+          <p><strong>Nombre:</strong> ${fullName}</p>
+          <p><strong>Empresa:</strong> ${company}</p>
+          <p><strong>Correo corporativo:</strong> ${corporateEmail}</p>
+          <p><strong>Teléfono:</strong> ${phone || 'No proporcionado'}</p>
+          <p><strong>Puesto:</strong> ${position}</p>
+          <p><strong>Asunto:</strong> ${subject}</p>
+          <hr />
+          <p><strong>Mensaje:</strong></p>
+          <p>${message.replace(/\n/g, '<br />')}</p>
+        </div>
       `,
       'h:Reply-To': corporateEmail
-    });
+    };
 
-    return res.json({ message: 'Mensaje enviado correctamente' });
-  } catch (error) {
-    console.error('sendContactMessage error:', error);
-    return res.status(500).json({ message: 'No se pudo enviar el mensaje' });
+    console.log('MAILGUN_DOMAIN =>', env.MAILGUN_DOMAIN);
+    console.log('MAILGUN_FROM =>', env.MAILGUN_FROM);
+    console.log('MAILGUN_REGION =>', env.MAILGUN_REGION);
+
+    const result = await mg.messages.create(env.MAILGUN_DOMAIN, emailData);
+
+    return res.status(200).json({
+      message: 'Mensaje enviado correctamente',
+      id: result.id
+    });
+  } catch (error: any) {
+    console.error('Mailgun send error:', error);
+
+    return res.status(500).json({
+      message: 'No se pudo enviar el mensaje',
+      error: error?.message || 'Error desconocido'
+    });
   }
 };

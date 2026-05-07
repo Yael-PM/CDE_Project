@@ -1,13 +1,12 @@
 import fs from 'fs';
 import path from 'path';
 import multer from 'multer';
-import { env } from '../config/env';
 
-const uploadPath = path.resolve(env.UPLOAD_DIR);
-fs.mkdirSync(uploadPath, { recursive: true });
+const uploadDir = path.resolve('uploads');
+fs.mkdirSync(uploadDir, { recursive: true });
 
 const storage = multer.diskStorage({
-  destination: (_, __, cb) => cb(null, uploadPath),
+  destination: (_, __, cb) => cb(null, uploadDir),
   filename: (_, file, cb) => {
     const ext = path.extname(file.originalname);
     const base = path.basename(file.originalname, ext).replace(/\s+/g, '-').toLowerCase();
@@ -17,9 +16,11 @@ const storage = multer.diskStorage({
 
 const fileFilter: multer.Options['fileFilter'] = (_, file, cb) => {
   const allowed = ['image/png', 'image/jpeg', 'image/jpg', 'image/webp'];
+
   if (!allowed.includes(file.mimetype)) {
     return cb(new Error('Formato de imagen no permitido'));
   }
+
   cb(null, true);
 };
 
