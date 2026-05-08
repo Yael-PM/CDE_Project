@@ -2,11 +2,11 @@ import { Router } from 'express';
 import { requireAuth } from '../../middlewares/auth.middleware';
 import { uploadNoteImage } from '../../middlewares/upload.middleware';
 import {
-  createNote,
-  deleteNote,
-  getNoteById,
   getNotes,
-  updateNote
+  getNoteById,
+  createNote,
+  updateNote,
+  deleteNote
 } from './notes.controller';
 
 const router = Router();

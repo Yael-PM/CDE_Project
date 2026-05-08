@@ -6,5 +6,6 @@ const mailgun = new Mailgun(FormData);
 
 export const mg = mailgun.client({
   username: 'api',
-  key: env.MAILGUN_API_KEY
+  key: env.MAILGUN_API_KEY,
+  url: 'https://api.mailgun.net'
 });
