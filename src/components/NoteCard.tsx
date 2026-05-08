@@ -41,7 +41,7 @@ const NoteCard = ({ id, date, title, excerpt, imageUrl }: NoteCardProps) => {
                 <p className="line-clamp-2 text-gray-700 ">{excerpt}</p>
 
                 {/* Link al final */}
-                <div className={`mt-auto pt-4 flex justify-center`}>
+                <div className={`mt-auto pt-4 flex justify-end`}>
                     <p className={`font-semibold underline underline-offset-4 cursor-pointer ${colors.text}`}>
                         Leer más →
                     </p>
