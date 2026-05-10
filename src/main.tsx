@@ -14,6 +14,8 @@ import AboutUs from './pages/AboutUs'
 import Contact from './pages/Contact'
 import ManageNotes from './pages/ManageNotes'
 import Blog from './pages/Blog'
+import Login from './pages/Login'
+import { AuthProvider } from './contexts/auth.provider'
 
 const router = createBrowserRouter([
   {
@@ -25,16 +27,19 @@ const router = createBrowserRouter([
       {path: '/about-us', element: <AboutUs/>},
       {path: '/contact', element: <Contact/>},
       {path: '/manage-notes',element: <ManageNotes/>},
-      {path: '/blog', element: <Blog/>}
+      {path: '/blog', element: <Blog/>},
+      {path: '/login', element: <Login/>}
     ]
   }
 ])
 
 createRoot(document.getElementById('root')!).render(
   <StrictMode>
-    <Suspense fallback={<div>Loading...</div>}>
-      <RouterProvider router={router}>
-      </RouterProvider>
-    </Suspense>
+    <AuthProvider>
+      <Suspense fallback={<div>Loading...</div>}>
+        <RouterProvider router={router}>
+        </RouterProvider>
+      </Suspense>
+    </AuthProvider>
   </StrictMode>,
 )

@@ -24,7 +24,7 @@ const CustomButton = ({
     const navigate = useNavigate();
     
     // Estilos base
-    const baseStyles = 'mx-5 px-4 py-2 font-semibold rounded-lg transition transform';
+    const baseStyles = 'mx-5 px-2 py-2 font-semibold rounded-lg transition transform';
     const enabledStyles = 'hover:scale-105 cursor-pointer';
     const disabledStyles = 'cursor-not-allowed opacity-50 grayscale'; // Mejoramos el feedback visual de deshabilitado
 
