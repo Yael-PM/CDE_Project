@@ -51,8 +51,8 @@ const Footer = () => {
       <div className='max-w-7xl mx-auto px-6 md:px-10 py-3 flex flex-col sm:flex-row sm:justify-between items-center gap-2 text-xs text-dark-100 border-t border-dark-100'>
         <p>{t('footer.rights')}</p>
         <div className='flex gap-4'>
-          <p className='hover:text-neutral-300 cursor-pointer'>{t('footer.privacy')}</p>
-          <p className='hover:text-neutral-300 cursor-pointer'>{t('footer.terms')}</p>
+          <p className='hover:text-neutral-300 cursor-pointer'><Link to='/privacy-notice'>{t('footer.privacy')}</Link></p>
+          <p className='hover:text-neutral-300 cursor-pointer'><Link to='/terms-and-conditions'>{t('footer.terms')}</Link></p>
         </div>
       </div>
     </footer>
