@@ -20,5 +20,9 @@ export const env = {
   MAILGUN_DOMAIN: process.env.MAILGUN_DOMAIN || '',
   MAILGUN_FROM: process.env.MAILGUN_FROM || '',
   CONTACT_TO_EMAIL: process.env.CONTACT_TO_EMAIL || '',
-  MAILGUN_REGION: process.env.MAILGUN_REGION || 'US'
+  MAILGUN_REGION: process.env.MAILGUN_REGION || 'US',
+
+  CLOUDINARY_CLOUD_NAME: process.env.CLOUDINARY_CLOUD_NAME || '',
+  CLOUDINARY_API_KEY: process.env.CLOUDINARY_API_KEY || '',
+  CLOUDINARY_API_SECRET: process.env.CLOUDINARY_API_SECRET || ''
 };

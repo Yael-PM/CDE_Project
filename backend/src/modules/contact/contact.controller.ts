@@ -53,7 +53,7 @@ ${message}
       `.trim(),
       html: `
         <div style="font-family: Arial, sans-serif; line-height: 1.6;">
-          <h2>Nuevo mensaje desde Contact Us</h2>
+          <h2>CDE CONTACTO</h2>
           <p><strong>Nombre:</strong> ${fullName}</p>
           <p><strong>Empresa:</strong> ${company}</p>
           <p><strong>Correo corporativo:</strong> ${corporateEmail}</p>
@@ -68,15 +68,10 @@ ${message}
       'h:Reply-To': corporateEmail
     };
 
-    console.log('MAILGUN_DOMAIN =>', env.MAILGUN_DOMAIN);
-    console.log('MAILGUN_FROM =>', env.MAILGUN_FROM);
-    console.log('MAILGUN_REGION =>', env.MAILGUN_REGION);
-
     const result = await mg.messages.create(env.MAILGUN_DOMAIN, emailData);
 
     return res.status(200).json({
       message: 'Mensaje enviado correctamente',
-      id: result.id
     });
   } catch (error: any) {
     console.error('Mailgun send error:', error);
