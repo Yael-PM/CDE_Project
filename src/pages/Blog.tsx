@@ -1,4 +1,4 @@
-import { useState } from 'react'
+import { useState, useEffect } from 'react'
 import banerBg from '/blogBanerBg.jpg'
 
 import CustomButton from '../components/CustomButton'
@@ -14,52 +14,58 @@ interface BlogPost {
     imageUrl?: string;
 }
 
+export interface ApiResponse {
+    data: BlogPost[];
+    pagination: {
+        page: number;
+        limit: number;
+        total: number;
+        totalPages: number;
+    };
+}
+
 const NOTES_PER_PAGE = 12; // Notas por página en la sección de abajo
 
-const ALL_POSTS: BlogPost[] = [
-    { id: 1, date: "Febrero 2026", title: "Nota Reciente 1", excerpt: "Esta es la nota más nueva del blog..." },
-    { id: 2, date: "Marzo 2026", title: "Nota Reciente 2", excerpt: "Esta es la segunda nota más nueva...", imageUrl: '/blogBanerBg.jpg' },
-    { id: 3, date: "Febrero 2026", title: "Nota Común 3", excerpt: "Anim amet cillum..." },
-    { id: 4, date: "Febrero 2026", title: "Nota Común 4", excerpt: "Anim amet cillum..." },
-    { id: 5, date: "Febrero 2026", title: "Nota Común 5", excerpt: "Anim amet cillum..." },
-    { id: 6, date: "Febrero 2026", title: "Nota Común 6", excerpt: "Anim amet cillum..." },
-    { id: 7, date: "Febrero 2026", title: "Nota Común 7", excerpt: "Anim amet cillum..." },
-    { id: 8, date: "Febrero 2026", title: "Nota Común 8", excerpt: "Anim amet cillum..." },
-    { id: 9, date: "Febrero 2026", title: "Nota Común 9", excerpt: "Anim amet cillum..." },
-    { id: 10, date: "Febrero 2026", title: "Nota Común 10", excerpt: "Anim amet cillum..." },
-    { id: 11, date: "Febrero 2026", title: "Nota Común 11", excerpt: "Anim amet cillum..." },
-    { id: 12, date: "Marzo 2026", title: "Nota Común 12", excerpt: "Anim amet cillum...", imageUrl: '/blogBanerBg.jpg' },
-    { id: 13, date: "Febrero 2026", title: "Nota Común 13", excerpt: "Anim amet cillum..." },
-    { id: 14, date: "Febrero 2026", title: "Nota Común 14", excerpt: "Anim amet cillum..." },
-    { id: 15, date: "Marzo 2026", title: "Nota Común 15", excerpt: "Anim amet cillum...", imageUrl: '/blogBanerBg.jpg' },
-    { id: 16, date: "Febrero 2026", title: "Nota Común 16", excerpt: "Anim amet cillum..." },
-    { id: 17, date: "Febrero 2026", title: "Nota Común 17", excerpt: "Anim amet cillum..." },
-    { id: 18, date: "Marzo 2026", title: "Nota Común 18", excerpt: "Anim amet cillum...", imageUrl: '/blogBanerBg.jpg' },
-    { id: 19, date: "Febrero 2026", title: "Nota Común 19", excerpt: "Anim amet cillum..." },
-    { id: 20, date: "Febrero 2026", title: "Nota Común 20", excerpt: "Anim amet cillum..." },
-    { id: 21, date: "Marzo 2026", title: "Nota Común 21", excerpt: "Anim amet cillum...", imageUrl: '/blogBanerBg.jpg' },
-    { id: 22, date: "Febrero 2026", title: "Nota Común 22", excerpt: "Anim amet cillum..." },
-    { id: 23, date: "Febrero 2026", title: "Nota Común 23", excerpt: "Anim amet cillum..." },
-    { id: 24, date: "Marzo 2026", title: "Nota Común 24", excerpt: "Anim amet cillum...", imageUrl: '/blogBanerBg.jpg' },
-    { id: 25, date: "Febrero 2026", title: "Nota Común 25", excerpt: "Anim amet cillum..." },
-];
-
 const Blog = () => {
+    const [posts, setPosts] = useState<BlogPost[]>([]);
+    const [loading, setLoading] = useState<boolean>(true);
+    const [error, setError] = useState<string | null>(null);
+
     const [currentPage, setCurrentPage] = useState<number>(1);
     const [search, setSearch] = useState<string>("");
 
-    // 1. Filtrar primero por el buscador (para que afecte a todo el blog)
-    const filteredPosts = ALL_POSTS.filter((post) =>
+    useEffect(() => {
+        const fetchNotes = async () => {
+            try {
+                const apiUrl = import.meta.env.VITE_API_URL;
+                console.log("API URL:", apiUrl); // Verificar que la URL se esté leyendo correctamente
+                const response = await fetch(`${apiUrl}/notes`);
+
+                if (!response.ok) {
+                    throw new Error('Error al conectar con la base de datos');
+                }
+
+                const data: BlogPost[] = await response.json();
+                setPosts(data);
+            } catch (err: any) {
+                setError(err.message || 'Ocurrió un error inesperado');
+            } finally {
+                setLoading(false);
+            }
+        };
+
+        fetchNotes();
+    }, []);
+
+    /* Filtrar notas según la búsqueda */
+    const filteredPosts = posts.filter(post =>
         post.title.toLowerCase().includes(search.toLowerCase())
     );
 
-    // 2. Extraer las 2 notas más recientes (las dos primeras del arreglo filtrado)
     const recentPosts = filteredPosts.slice(0, 2);
 
-    // 3. Extraer el resto de las notas para la sección paginada (desde el índice 2 en adelante)
     const remainingPosts = filteredPosts.slice(2);
 
-    // 4. Calcular paginación basada ÚNICAMENTE en las notas restantes
     const totalPages = Math.ceil(remainingPosts.length / NOTES_PER_PAGE);
 
     // Cortar el array de las restantes para la página actual
@@ -68,10 +74,21 @@ const Blog = () => {
         currentPage * NOTES_PER_PAGE
     );
 
+    /* Manejador de búsqueda */
     const handleSearch = (e: React.ChangeEvent<HTMLInputElement>) => {
         setSearch(e.target.value);
         setCurrentPage(1);
     };
+
+
+    //Manejo de estados de carga y error en la interfaz
+    if (loading) {
+        return <div className="flex justify-center items-center h-screen text-xl text-gray-600">Cargando publicaciones de regulación sanitaria...</div>;
+    }
+
+    if (error) {
+        return <div className="flex justify-center items-center h-screen text-xl text-red-500">{error}</div>;
+    }
 
     return (
         <main className="bg-neutral-100 min-h-screen flex flex-col pb-10">
@@ -120,30 +137,30 @@ const Blog = () => {
                     <div>
                         <div className='grid grid-cols-1 md:grid-cols-2 gap-10'>
                             {recentPosts.map((post) => (
-                                <NoteCard 
+                                <NoteCard
                                     key={post.id}
-                                    id={post.id} 
-                                    date={post.date} 
-                                    title={post.title} 
-                                    excerpt={post.excerpt} 
+                                    id={post.id}
+                                    date={post.date}
+                                    title={post.title}
+                                    excerpt={post.excerpt}
                                     imageUrl={post.imageUrl}
                                 />
                             ))}
                         </div>
                     </div>
                 )}
-                
+
                 {/* SECCIÓN B: RESTO DE LAS NOTAS (Paginadas, diseño de rejilla de 4 columnas) */}
                 {paginatedPosts.length > 0 ? (
                     <div>
                         <div className='grid grid-cols-1 sm:grid-cols-2 md:grid-cols-4 gap-5'>
                             {paginatedPosts.map((post) => (
-                                <NoteCard 
+                                <NoteCard
                                     key={post.id}
-                                    id={post.id} 
-                                    date={post.date} 
-                                    title={post.title} 
-                                    excerpt={post.excerpt} 
+                                    id={post.id}
+                                    date={post.date}
+                                    title={post.title}
+                                    excerpt={post.excerpt}
                                     imageUrl={post.imageUrl}
                                 />
                             ))}
@@ -161,7 +178,7 @@ const Blog = () => {
                 {/* Paginación (Solo se muestra si hay más de una página de notas restantes) */}
                 {totalPages > 1 && (
                     <div className="mt-10">
-                        <Pagination 
+                        <Pagination
                             currentPage={currentPage}
                             totalPages={totalPages}
                             onPageChange={setCurrentPage}
