@@ -19,22 +19,22 @@ type NoteRow = RowDataPacket & {
 
 export const getNotes = async (req: Request, res: Response) => {
   try {
-    const userId = req.session.user!.userId;
     const search = String(req.query.search || '').trim();
     const page = Math.max(Number(req.query.page || 1), 1);
     const limit = Math.min(Math.max(Number(req.query.limit || 10), 1), 20);
     const offset = (page - 1) * limit;
 
+    // 1. Construir la consulta principal para obtener las notas públicas
     let query = `
       SELECT note_id, user_id, note_title, note_description, image_reference,
              cloudinary_public_id, url_reference, creation_date
       FROM note
-      WHERE user_id = ?
     `;
-    const params: any[] = [userId];
+    const params: any[] = [];
 
+    // Si hay un término de búsqueda, agregamos el WHERE dinámicamente
     if (search) {
-      query += ` AND note_title LIKE ? `;
+      query += ` WHERE note_title LIKE ? `;
       params.push(`%${search}%`);
     }
 
@@ -43,17 +43,19 @@ export const getNotes = async (req: Request, res: Response) => {
 
     const [rows] = await pool.execute<NoteRow[]>(query, params);
 
-    let countQuery = `SELECT COUNT(*) AS total FROM note WHERE user_id = ?`;
-    const countParams: any[] = [userId];
+    // 2. Construir la consulta para el conteo total de notas públicas
+    let countQuery = `SELECT COUNT(*) AS total FROM note`;
+    const countParams: any[] = [];
 
     if (search) {
-      countQuery += ` AND note_title LIKE ?`;
+      countQuery += ` WHERE note_title LIKE ?`;
       countParams.push(`%${search}%`);
     }
 
     const [countRows] = await pool.execute<RowDataPacket[]>(countQuery, countParams);
     const total = Number(countRows[0].total);
 
+    // 3. Responder al cliente
     return res.json({
       data: rows,
       pagination: {
