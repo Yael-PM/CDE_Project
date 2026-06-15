@@ -31,7 +31,7 @@ const Login = () => {
             });
 
             // Redirigimos usando tu objeto de rutas para mayor seguridad
-            setTimeout(() => navigate(ROUTES.HOME), 1000); 
+            setTimeout(() => navigate(ROUTES.MANAGE_NOTES), 1000); 
             
         } catch (err) {
             const error = err  as Error;

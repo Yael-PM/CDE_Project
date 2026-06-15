@@ -6,7 +6,8 @@ export async function login(email: string, password: string): Promise<LoginRespo
   const res = await fetch(`${API_URL}/auth/login`, {
     method: 'POST',
     headers: { 'Content-Type': 'application/json' },
-    body: JSON.stringify({ email, password })
+    body: JSON.stringify({ email, password }),
+    credentials: 'include'
   });
 
   if (!res.ok) {

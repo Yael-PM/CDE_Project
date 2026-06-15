@@ -1,11 +1,13 @@
 import { useState } from "react";
 import CustomButton from "../components/CustomButton";
 import Pagination from "../components/Pagination";
+import { ROUTES }  from '../routes'
 
 import { FaPlus } from "react-icons/fa6";
 import { FaSearch } from "react-icons/fa";
 import { FaPencil } from "react-icons/fa6";
 import { FaRegTrashCan } from "react-icons/fa6";
+import { Link } from "react-router";
 
 interface Note {
     id: number;
@@ -58,7 +60,7 @@ const ManageNotes = () => {
                     <p className="text-lg text-slate-600 max-w-xl leading-relaxed">
                         Administra y organiza el contenido informático de las rutas corporativas
                     </p>
-                    <div className="flex md:justify-end">
+                    <Link to={ROUTES.CREATE_NOTE} className="flex md:justify-end">
                         <CustomButton
                             variant="primary"
                             className="flex items-center justify-center gap-2 px-6 py-3 rounded-xl border border-tertiary-300 focus:border-blue-500 outline-none transition-all"
@@ -66,7 +68,7 @@ const ManageNotes = () => {
                             <FaPlus />
                             <p>Crear nueva nota</p>
                         </CustomButton>
-                    </div>
+                    </Link>
                 </div>
             </section>
 

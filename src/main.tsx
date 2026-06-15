@@ -17,6 +17,7 @@ import Blog from './pages/Blog'
 import Login from './pages/Login'
 import TermsAndConditions from './pages/TermsAndConditions'
 import PrivacyNotice from './pages/PrivacyNotice'
+import CreateNote from './pages/CreateNote'
 import { AuthProvider } from './contexts/auth.provider'
 
 const router = createBrowserRouter([
@@ -29,6 +30,7 @@ const router = createBrowserRouter([
       {path: '/about-us', element: <AboutUs/>},
       {path: '/contact', element: <Contact/>},
       {path: '/manage-notes',element: <ManageNotes/>},
+      {path: '/create-note', element: <CreateNote/>},
       {path: '/blog', element: <Blog/>},
       {path: '/login', element: <Login/>},
       {path: '/terms-and-conditions', element: <TermsAndConditions/>},
