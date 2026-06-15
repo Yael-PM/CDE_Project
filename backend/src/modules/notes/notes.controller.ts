@@ -24,7 +24,7 @@ export const getNotes = async (req: Request, res: Response) => {
     const limit = Math.min(Math.max(Number(req.query.limit || 10), 1), 20);
     const offset = (page - 1) * limit;
 
-    // 1. Construir la consulta principal para obtener las notas públicas
+    // 1. Construir la consulta principal
     let query = `
       SELECT note_id, user_id, note_title, note_description, image_reference,
              cloudinary_public_id, url_reference, creation_date
@@ -32,18 +32,18 @@ export const getNotes = async (req: Request, res: Response) => {
     `;
     const params: any[] = [];
 
-    // Si hay un término de búsqueda, agregamos el WHERE dinámicamente
     if (search) {
       query += ` WHERE note_title LIKE ? `;
       params.push(`%${search}%`);
     }
 
-    query += ` ORDER BY creation_date DESC LIMIT ? OFFSET ?`;
-    params.push(limit, offset);
+    // CONCATENAMOS limit y offset directamente para evitar el bug de mysql2 preparado
+    query += ` ORDER BY creation_date DESC LIMIT ${limit} OFFSET ${offset}`;
 
+    // Ahora pasamos solo los parámetros del WHERE (si existen)
     const [rows] = await pool.execute<NoteRow[]>(query, params);
 
-    // 2. Construir la consulta para el conteo total de notas públicas
+    // 2. Construir la consulta para el conteo total
     let countQuery = `SELECT COUNT(*) AS total FROM note`;
     const countParams: any[] = [];
 
@@ -55,7 +55,6 @@ export const getNotes = async (req: Request, res: Response) => {
     const [countRows] = await pool.execute<RowDataPacket[]>(countQuery, countParams);
     const total = Number(countRows[0].total);
 
-    // 3. Responder al cliente
     return res.json({
       data: rows,
       pagination: {
