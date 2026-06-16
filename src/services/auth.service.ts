@@ -40,5 +40,14 @@ export async function getMe(): Promise<UserData> {
     throw new Error('Not authenticated');
   }
 
-  return res.json();
+  // El backend devuelve { authenticated: boolean, user: UserData | null }
+  const data = await res.json(); 
+
+  // Si no hay usuario en el objeto, lanzamos el error para que el AuthProvider lo capture
+  if (!data.user) {
+      throw new Error('No user session active');
+  }
+
+  // Retornamos SOLAMENTE el objeto user
+  return data.user; 
 }

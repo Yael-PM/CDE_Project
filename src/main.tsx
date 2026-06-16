@@ -20,21 +20,31 @@ import PrivacyNotice from './pages/PrivacyNotice'
 import CreateNote from './pages/CreateNote'
 import { AuthProvider } from './contexts/auth.provider'
 
+import ProtectedRoute from './components/ProtectedRoute'
+
 const router = createBrowserRouter([
   {
     path: '/',
     element: <DefaultLayout/>,
     children: [
+      // Rutas Públicas
       {index: true, element: <LandingPage/>},
       {path: '/services', element: <Services/>},
       {path: '/about-us', element: <AboutUs/>},
       {path: '/contact', element: <Contact/>},
-      {path: '/manage-notes',element: <ManageNotes/>},
-      {path: '/create-note', element: <CreateNote/>},
       {path: '/blog', element: <Blog/>},
       {path: '/login', element: <Login/>},
       {path: '/terms-and-conditions', element: <TermsAndConditions/>},
-      {path: '/privacy-notice', element: <PrivacyNotice/>}
+      {path: '/privacy-notice', element: <PrivacyNotice/>},
+      
+      // Rutas Protegidas (Envueltas en el ProtectedRoute)
+      {
+        element: <ProtectedRoute />,
+        children: [
+          {path: '/manage-notes', element: <ManageNotes/>},
+          {path: '/create-note', element: <CreateNote/>}
+        ]
+      }
     ]
   }
 ])
@@ -43,8 +53,7 @@ createRoot(document.getElementById('root')!).render(
   <StrictMode>
     <AuthProvider>
       <Suspense fallback={<div>Loading...</div>}>
-        <RouterProvider router={router}>
-        </RouterProvider>
+        <RouterProvider router={router} />
       </Suspense>
     </AuthProvider>
   </StrictMode>,
