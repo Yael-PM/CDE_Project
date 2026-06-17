@@ -1,0 +1,6 @@
+User-agent: *
+Disallow: /login
+Disallow: /manage-notes
+Disallow: /create-note
+
+Sitemap: https://www.tudominio.com/sitemap.xml

@@ -2,6 +2,7 @@ import { useTranslation } from "react-i18next"
 import { Link } from 'react-router-dom'
 
 import CustomButton from "../components/CustomButton";
+import SEO from "../components/SEO";
 
 import { FaPhoneSquareAlt } from "react-icons/fa";
 import { IoMdSend } from "react-icons/io";
@@ -20,6 +21,10 @@ const Contact = () => {
   return (
     // min-h-screen aquí asegura que el fondo cubra todo y el footer baje
     <main className="bg-neutral-200 min-h-screen flex flex-col">
+      <SEO 
+        title="Contacto - CDE" 
+        description="Ponte en contacto con nosotros para obtener más información sobre nuestros servicios y cómo podemos ayudarte." 
+      />
 
       {/* Hero Section */}
       <section className='px-4 md:px-10 py-10'>

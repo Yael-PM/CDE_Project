@@ -1,10 +1,15 @@
 import { useTranslation } from "react-i18next"
 import { Link } from "react-router-dom";
+import SEO from "../components/SEO";
 
 const TermsAndConditions = () => {
   const { t } = useTranslation();
   return (
     <div className="px-10 m-5 flex-col items-center">
+      <SEO
+        title="Términos y Condiciones - CDE"
+        description="Consulta los términos y condiciones de uso del portal de CDE Consultores."
+      />
       
       {/* Header */}
       <h1 className="text-4xl justify-center">{ t("terms-and-conditions.header-title") }</h1>

@@ -4,6 +4,7 @@ import banerBg from '/blogBanerBg.jpg'
 import CustomButton from '../components/CustomButton'
 import NoteCard from "../components/NoteCard"
 import Pagination from "../components/Pagination"
+import SEO from '../components/SEO'
 import { FaSearch } from 'react-icons/fa'
 
 interface BlogPost {
@@ -92,7 +93,10 @@ const Blog = () => {
 
     return (
         <main className="bg-neutral-100 min-h-screen flex flex-col pb-10">
-
+            <SEO 
+                title="Blog - CDE" 
+                description="Análisis, guías prácticas y novedades en regulación sanitaria para prevenir riesgos y operar con certeza." 
+            />
             {/* Banner */}
             <section style={{ backgroundImage: `url(${banerBg})` }} className="relative w-full h-[40vh] md:h-[60vh] bg-cover bg-center flex flex-col">
                 <div className="absolute inset-0 bg-neutral-100/20 z-0" />

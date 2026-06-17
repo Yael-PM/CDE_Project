@@ -3,6 +3,7 @@ import { useNavigate } from 'react-router-dom'
 import { useAuth } from '../hooks/useAuth' // Importamos tu hook personalizado
 import toast, { Toaster } from 'react-hot-toast'
 import { ROUTES } from '../routes'
+import SEO from '../components/SEO'
 
 const Login = () => {
     // Extraemos login y loading de tu hook
@@ -41,6 +42,10 @@ const Login = () => {
 
     return (
         <div>
+            <SEO 
+                title="Login - CDE" 
+                description="Inicia sesión en tu cuenta de CDE para gestionar tus notas de manera eficiente y segura. Accede a todas tus notas desde cualquier dispositivo." 
+            />
             <Toaster position="top-center" reverseOrder={false} />
 
             <section

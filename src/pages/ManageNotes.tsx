@@ -8,6 +8,7 @@ import { FaSearch } from "react-icons/fa";
 import { FaPencil } from "react-icons/fa6";
 import { FaRegTrashCan } from "react-icons/fa6";
 import { Link } from "react-router";
+import SEO from "../components/SEO";
 
 interface Note {
     id: number;
@@ -50,7 +51,10 @@ const ManageNotes = () => {
 
     return (
         <main className="bg-neutral-200 min-h-screen flex flex-col pb-10">
-
+            <SEO 
+                title="Gestión de Notas - CDE" 
+                description="Administra y organiza el contenido informático de las rutas corporativas." 
+            />
             {/* Hero section */}
             <section className="mx-5 md:mx-10 py-10">
                 <h1 className="text-4xl md:text-6xl font-extrabold text-slate-900 leading-[1.1] mb-4">

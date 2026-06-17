@@ -1,5 +1,6 @@
 import ServiceCard from '../components/ServiceCard'
 import CustomButton from '../components/CustomButton';
+import SEO from '../components/SEO';
 import { useTranslation, Trans } from 'react-i18next'
 
 import { LuShieldCheck } from "react-icons/lu";
@@ -16,6 +17,10 @@ const LandingPage = () => {
 
   return (
     <div className="w-full overflow-hidden">
+      <SEO 
+        title="Inicio - CDE" 
+        description="Bienvenido a CDE, tu aliado en defensa legal. Ofrecemos servicios de alta calidad para proteger tus derechos y garantizar justicia. Descubre cómo podemos ayudarte hoy mismo." 
+      />
       {/* 1. SECCIÓN HERO */}
       <section className='relative h-[90vh] md:h-screen w-full flex flex-col justify-center items-start px-6 md:px-20'>
         <div className='absolute inset-0 -z-10'>

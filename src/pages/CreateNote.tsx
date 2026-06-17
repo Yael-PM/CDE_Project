@@ -3,6 +3,8 @@ import { LuArrowLeft, LuCloudUpload, LuLink } from 'react-icons/lu';
 import { useNavigate } from 'react-router-dom';
 import { useCreateNote } from '../hooks/useNotes';
 
+import SEO from '../components/SEO';
+
 const CreateNote = () => {
     const navigate = useNavigate();
     const { createNewNote, loading, error, success } = useCreateNote();
@@ -46,6 +48,10 @@ const CreateNote = () => {
 
     return (
         <div className="min-h-screen bg-slate-50 py-10 px-4 md:px-10">
+            <SEO 
+                title="Crear Nota - CDE" 
+                description="Publica una nueva nota informativa en el portal de CDE Consultores. Completa el formulario con título, resumen, imagen de portada y enlace del sitio para compartir contenido relevante." 
+            />
             <div className="max-w-4xl mx-auto">
                 
                 <button 

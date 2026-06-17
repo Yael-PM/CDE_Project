@@ -5,6 +5,7 @@ import { HiOutlineDocumentText } from "react-icons/hi";
 
 import CustomButton from '../components/CustomButton';
 import ServiceCard from '../components/ServiceCard';
+import SEO from '../components/SEO';
 
 import banner from '../assets/landing-banner.jpg';
 import experienceImg from '../assets/landing-image.jpg';
@@ -14,6 +15,10 @@ const Services = () => {
 
   return (
     <div className="w-full overflow-hidden">
+      <SEO 
+        title="Servicios - CDE" 
+        description="Descubre nuestros servicios de asesoría y gestión de trámites para ciudadanos, empresas y profesionales. Simplificamos tus procesos legales y administrativos con soluciones personalizadas." 
+      />
       {/* 1. SECCIÓN HERO (Igual que antes, ajustado) */}
       <section className='relative h-[80vh] md:h-screen w-full flex flex-col justify-center items-center px-6 text-center'>
         <div className='absolute inset-0 -z-10'>

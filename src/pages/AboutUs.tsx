@@ -2,6 +2,7 @@ import { useTranslation } from 'react-i18next'
 import banerBg from '/aboutUsBanerBg.jpg'
 import descriptionImg from '/aboutUsDescription.jpg'
 import ServiceCard from '../components/ServiceCard'
+import SEO from '../components/SEO'
 import { FaFlag } from "react-icons/fa6";
 import { FaEye } from "react-icons/fa";
 
@@ -14,7 +15,10 @@ const AboutUs = () => {
 
   return (
     <div className="w-full overflow-hidden">
-
+      <SEO 
+        title="Nosotros - CDE" 
+        description="Conoce la historia, misión y visión de CDE. Descubre cómo transformamos el desarrollo de software con innovación y compromiso." 
+      />
       {/* Banner */}
       <section
         style={{ backgroundImage: `url(${banerBg})` }}
