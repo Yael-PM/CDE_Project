@@ -7,28 +7,12 @@ import Pagination from "../components/Pagination"
 import SEO from '../components/SEO'
 import { FaSearch } from 'react-icons/fa'
 
-interface BlogPost {
-    id: number;
-    date: string;
-    title: string;
-    excerpt: string;
-    imageUrl?: string;
-}
-
-export interface ApiResponse {
-    data: BlogPost[];
-    pagination: {
-        page: number;
-        limit: number;
-        total: number;
-        totalPages: number;
-    };
-}
+import type { Note, NotesResponse } from '../types/notes.types';
 
 const NOTES_PER_PAGE = 12; // Notas por página en la sección de abajo
 
 const Blog = () => {
-    const [posts, setPosts] = useState<BlogPost[]>([]);
+    const [posts, setPosts] = useState<Note[]>([]);
     const [loading, setLoading] = useState<boolean>(true);
     const [error, setError] = useState<string | null>(null);
 
@@ -39,15 +23,14 @@ const Blog = () => {
         const fetchNotes = async () => {
             try {
                 const apiUrl = import.meta.env.VITE_API_URL;
-                console.log("API URL:", apiUrl); // Verificar que la URL se esté leyendo correctamente
                 const response = await fetch(`${apiUrl}/notes`);
 
                 if (!response.ok) {
                     throw new Error('Error al conectar con la base de datos');
                 }
 
-                const data: BlogPost[] = await response.json();
-                setPosts(data);
+                const result: NotesResponse = await response.json();
+                setPosts(result.data);
             } catch (err: any) {
                 setError(err.message || 'Ocurrió un error inesperado');
             } finally {
@@ -60,7 +43,7 @@ const Blog = () => {
 
     /* Filtrar notas según la búsqueda */
     const filteredPosts = posts.filter(post =>
-        post.title.toLowerCase().includes(search.toLowerCase())
+        post.note_title.toLowerCase().includes(search.toLowerCase())
     );
 
     const recentPosts = filteredPosts.slice(0, 2);
@@ -141,14 +124,7 @@ const Blog = () => {
                     <div>
                         <div className='grid grid-cols-1 md:grid-cols-2 gap-10'>
                             {recentPosts.map((post) => (
-                                <NoteCard
-                                    key={post.id}
-                                    id={post.id}
-                                    date={post.date}
-                                    title={post.title}
-                                    excerpt={post.excerpt}
-                                    imageUrl={post.imageUrl}
-                                />
+                                <NoteCard key={post.note_id} note={post} />
                             ))}
                         </div>
                     </div>
@@ -159,14 +135,7 @@ const Blog = () => {
                     <div>
                         <div className='grid grid-cols-1 sm:grid-cols-2 md:grid-cols-4 gap-5'>
                             {paginatedPosts.map((post) => (
-                                <NoteCard
-                                    key={post.id}
-                                    id={post.id}
-                                    date={post.date}
-                                    title={post.title}
-                                    excerpt={post.excerpt}
-                                    imageUrl={post.imageUrl}
-                                />
+                                <NoteCard key={post.note_id} note={post} />
                             ))}
                         </div>
                     </div>
