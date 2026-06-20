@@ -76,30 +76,42 @@ const Blog = () => {
 
     return (
         <main className="bg-neutral-100 min-h-screen flex flex-col pb-10">
-            <SEO 
-                title="Blog - CDE" 
-                description="Análisis, guías prácticas y novedades en regulación sanitaria para prevenir riesgos y operar con certeza." 
+            <SEO
+                title="Blog - CDE"
+                description="Análisis, guías prácticas y novedades en regulación sanitaria para prevenir riesgos y operar con certeza."
             />
+
             {/* Banner */}
-            <section style={{ backgroundImage: `url(${banerBg})` }} className="relative w-full h-[40vh] md:h-[60vh] bg-cover bg-center flex flex-col">
-                <div className="absolute inset-0 bg-neutral-100/20 z-0" />
-                <h1 className="text-4xl md:text-8xl font-extrabold text-slate-900 leading-[1.1] mb-4after:content-['.'] after:ml-0.5 after:text-red-500 mt-5 mb-10 mx-5 md:mx-10">
-                    Blog
-                </h1>
-                <p className="text-lg text-slate-600 max-w-xl leading-relaxed mx-5 md:mx-10">
-                    Análisis, guías prácticas y novedades en regulación sanitaria para prevenir riesgos y operar con certeza.
-                </p>
+            <section
+                style={{ backgroundImage: `url(${banerBg})` }}
+                className="relative w-full h-[40vh] md:h-[60vh] bg-cover bg-center flex items-center justify-start px-5 md:px-10"
+            >
+                {/* Capa de superposición para integrar la imagen al diseño general */}
+                <div className="absolute inset-0 bg-neutral-900/10 z-0" />
+
+                {/* Contenedor del Panel de Texto Flotante */}
+                <div className="relative z-10 
+                 bg-white 
+                 backdrop-blur-sm 
+                 rounded-2xl 
+                 p-6 md:p-10 
+                 shadow-2xl 
+                 border border-white/50 
+                 max-w-xl md:max-w-2xl"
+                >
+                    <h1 className="text-4xl md:text-7xl font-extrabold text-slate-900 tracking-tight leading-none mb-4 md:mb-6">
+                        Blog
+                    </h1>
+
+                    <p className="text-base md:text-lg font-medium text-slate-700 leading-relaxed">
+                        Análisis, guías prácticas y novedades en regulación sanitaria para prevenir riesgos y operar con certeza.
+                    </p>
+                </div>
             </section>
 
             {/* Controles */}
             <section>
                 <div className='grid grid-cols-1 md:grid-cols-2 mx-5 md:mx-10 my-5 gap-4'>
-                    <div className='flex gap-2'>
-                        <CustomButton>Todos</CustomButton>
-                        <CustomButton>COFEPRIS</CustomButton>
-                        <CustomButton>Registros sanitarios</CustomButton>
-                    </div>
-
                     <div className="bg-gray-300 rounded-full flex items-center py-2 px-4">
                         <label htmlFor="buscar" className="text-gray-500 mr-3 flex items-center">
                             <FaSearch size={18} />
@@ -112,6 +124,9 @@ const Blog = () => {
                             onChange={handleSearch}
                             className="w-full bg-transparent border-none outline-none text-gray-700 placeholder-gray-500"
                         />
+                    </div>
+                    
+                    <div className='flex gap-2'>
                     </div>
                 </div>
             </section>
