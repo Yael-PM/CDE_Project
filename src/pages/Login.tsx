@@ -1,12 +1,11 @@
 import banerBg from '/aboutUsBanerBg.jpg'
-import { useNavigate } from 'react-router-dom'
-import { useAuth } from '../hooks/useAuth' // Importamos tu hook personalizado
+import { useNavigate, Link } from 'react-router-dom' // Añadido Link
+import { useAuth } from '../hooks/useAuth'
 import toast, { Toaster } from 'react-hot-toast'
 import { ROUTES } from '../routes'
 import SEO from '../components/SEO'
 
 const Login = () => {
-    // Extraemos login y loading de tu hook
     const { login, loading } = useAuth()
     const navigate = useNavigate()
 
@@ -18,8 +17,6 @@ const Login = () => {
         const password = formData.get('password') as string
 
         try {
-            // Ejecutamos el login desde el hook
-            // Este ya se encarga de hacer el setLoading(true) y setUser(res.user)
             await login({ email, password })
             
             toast.success('¡Bienvenido! Login exitoso', {
@@ -31,11 +28,10 @@ const Login = () => {
                 },
             });
 
-            // Redirigimos usando tu objeto de rutas para mayor seguridad
             setTimeout(() => navigate(ROUTES.MANAGE_NOTES), 1000); 
             
         } catch (err) {
-            const error = err  as Error;
+            const error = err as Error;
             toast.error(error.message);
         }
     }
@@ -44,7 +40,7 @@ const Login = () => {
         <div>
             <SEO 
                 title="Login - CDE" 
-                description="Inicia sesión en tu cuenta de CDE para gestionar tus notas de manera eficiente y segura. Accede a todas tus notas desde cualquier dispositivo." 
+                description="Inicia sesión en tu cuenta de CDE para gestionar tus notas de manera eficiente y segura." 
             />
             <Toaster position="top-center" reverseOrder={false} />
 
@@ -71,7 +67,7 @@ const Login = () => {
                             />
                         </div>
 
-                        <div className="w-full">
+                        <div className="w-full flex flex-col gap-2">
                             <input 
                                 name="password"
                                 type="password" 
@@ -80,6 +76,15 @@ const Login = () => {
                                 placeholder="Contraseña" 
                                 className="w-full p-3 rounded-xl border border-gray-300 shadow-inner focus:outline-none focus:ring-2 focus:ring-cyan-400 transition-all bg-gray-50/50 disabled:opacity-50"
                             />
+                            {/* NUEVO: Enlace de Olvidaste tu contraseña */}
+                            <div className="flex justify-end">
+                                <Link 
+                                    to={ROUTES.FORGOT_PASSWORD} 
+                                    className="text-sm font-medium text-cyan-600 hover:text-cyan-500 transition-colors"
+                                >
+                                    ¿Olvidaste tu contraseña?
+                                </Link>
+                            </div>
                         </div>
 
                         <div className="mt-4 flex justify-center">

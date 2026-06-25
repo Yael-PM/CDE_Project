@@ -1,9 +1,9 @@
 import type { LoginResponse, UserData } from '../types/auth.types';
 
-const API_URL = import.meta.env.API_URL || 'http://localhost:4000/api';
+const VITE_API_URL = import.meta.env.VITE_API_URL;
 
 export async function login(email: string, password: string): Promise<LoginResponse> {
-  const res = await fetch(`${API_URL}/auth/login`, {
+  const res = await fetch(`${VITE_API_URL}/auth/login`, {
     method: 'POST',
     headers: { 'Content-Type': 'application/json' },
     body: JSON.stringify({ email, password }),
@@ -19,7 +19,7 @@ export async function login(email: string, password: string): Promise<LoginRespo
 }
 
 export async function logout(): Promise<void> {
-  const res = await fetch(`${API_URL}/auth/logout`, {
+  const res = await fetch(`${VITE_API_URL}/auth/logout`, {
     method: 'POST',
     credentials: 'include'
   });
@@ -31,7 +31,7 @@ export async function logout(): Promise<void> {
 }
 
 export async function getMe(): Promise<UserData> {
-  const res = await fetch(`${API_URL}/auth/me`, {
+  const res = await fetch(`${VITE_API_URL}/auth/me`, {
     method: 'GET',
     credentials: 'include'
   });

@@ -2,6 +2,7 @@ import { StrictMode, Suspense } from 'react'
 import { createRoot } from 'react-dom/client'
 import { createBrowserRouter, RouterProvider } from 'react-router-dom'
 import { HelmetProvider } from 'react-helmet-async'
+import { AuthProvider } from './contexts/auth.provider'
 import './index.css'
 import '../i18n'
 
@@ -19,9 +20,10 @@ import Login from './pages/Login'
 import TermsAndConditions from './pages/TermsAndConditions'
 import PrivacyNotice from './pages/PrivacyNotice'
 import CreateNote from './pages/CreateNote'
-import { AuthProvider } from './contexts/auth.provider'
-
+import  ForgotPassword from './pages/ForgotPassword'
 import ProtectedRoute from './components/ProtectedRoute'
+import ResetPassword from './pages/ResetPassword'
+import NotFound from './pages/NotFound'
 
 const router = createBrowserRouter([
   {
@@ -37,7 +39,8 @@ const router = createBrowserRouter([
       {path: '/login', element: <Login/>},
       {path: '/terms-and-conditions', element: <TermsAndConditions/>},
       {path: '/privacy-notice', element: <PrivacyNotice/>},
-      
+      {path: '/forgot-password', element: <ForgotPassword/>},
+      {path: '/reset-password/:token', element: <ResetPassword/>},  // Ruta para resetear contraseña con token
       // Rutas Protegidas (Envueltas en el ProtectedRoute)
       {
         element: <ProtectedRoute />,
@@ -45,7 +48,8 @@ const router = createBrowserRouter([
           {path: '/manage-notes', element: <ManageNotes/>},
           {path: '/create-note', element: <CreateNote/>}
         ]
-      }
+      },
+      {path: '*', element: <NotFound />}
     ]
   }
 ])

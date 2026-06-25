@@ -1,11 +1,41 @@
-import { useState } from 'react';
+import { useState, useEffect } from 'react';
 import { notesService } from '../services/notes.service';
+import type { Note } from '../types/notes.types';
 
-// Definimos la estructura de los datos que recibirá la función
+export const useFetchNotes = () => {
+  const [notes, setNotes] = useState<Note[]>([]);
+  const [loading, setLoading] = useState<boolean>(true);
+  const [error, setError] = useState<string | null>(null);
+
+  const fetchNotes = async () => {
+    setLoading(true);
+    setError(null);
+    try {
+      const result = await notesService.getNotes();
+      setNotes(result.data);
+    } catch (err: unknown) {
+      if (err instanceof Error) {
+        setError(err.message);
+      } else {
+        setError('Ocurrió un error inesperado al cargar las notas');
+      }
+    } finally {
+      setLoading(false);
+    }
+  };
+
+  useEffect(() => {
+    fetchNotes();
+  }, []);
+
+  // Retornamos setNotes para poder actualizar la UI optimísticamente en ManageNotes
+  return { notes, setNotes, loading, error, refetch: fetchNotes };
+};
+
 interface CreateNoteArgs {
   title: string;
   description: string;
-  imageFile: File; // 'File' es el tipo nativo del navegador para los inputs de tipo archivo
+  imageFile: File; 
   urlReference: string;
 }
 
@@ -14,7 +44,6 @@ export const useCreateNote = () => {
   const [error, setError] = useState<string | null>(null);
   const [success, setSuccess] = useState<boolean>(false);
 
-  // Tipamos el parámetro desestructurado usando la interfaz
   const createNewNote = async ({ title, description, imageFile, urlReference }: CreateNoteArgs) => {
     setLoading(true);
     setError(null);
@@ -31,7 +60,6 @@ export const useCreateNote = () => {
       setSuccess(true);
       return result;
     } catch (err: unknown) {
-      // Tipamos 'err' como 'any' o extraemos su mensaje de forma segura
       if (err instanceof Error) {
         setError(err.message);
       } else {
@@ -59,14 +87,13 @@ export const useEditNote = () => {
         formData.append('note_description', description);
         formData.append('url_reference', urlReference);
         
-        // La imagen suele ser opcional al editar
         if (imageFile) {
             formData.append('image', imageFile);
         }
 
         try {
             const result = await notesService.editNote(id, formData);
-            return result; // Retorna la nota actualizada si todo sale bien
+            return result; 
         } catch (err: any) {
             setError(err.message || 'Error al editar la nota');
             return null;
@@ -87,9 +114,8 @@ export const useDeleteNote = () => {
     setError(null);
 
     try {
-      // 1. Delegamos la petición al servicio, el cual ya sabe cómo inyectar el Token o las Cookies
-      const result = await notesService.deleteNote(id);
-      return true; // Retornamos true si la API respondió con éxito
+      await notesService.deleteNote(id);
+      return true; 
     } catch (err: unknown) {
       if (err instanceof Error) {
         setError(err.message);

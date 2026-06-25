@@ -1,9 +1,25 @@
-const API_URL = import.meta.env.API_URL || 'http://localhost:4000/api';
+const VITE_API_URL = import.meta.env.VITE_API_URL || 'http://localhost:4000/api';
 
 export const notesService = {
-  // Tipamos 'formData' explícitamente como FormData
+  // OBTENER NOTAS
+  getNotes: async () => {
+    const response = await fetch(`${VITE_API_URL}/notes`, {
+      method: 'GET',
+      credentials: 'include', 
+    });
+
+    const data = await response.json();
+
+    if (!response.ok) {
+      throw new Error(data.message || 'Error al obtener las notas');
+    }
+
+    return data; // Retorna el NotesResponse
+  },
+
+  // CREAR NOTA
   createNote: async (formData: FormData) => {
-    const response = await fetch(`${API_URL}/notes/`, {
+    const response = await fetch(`${VITE_API_URL}/notes/`, {
       method: 'POST',
       body: formData,
       credentials: 'include', 
@@ -18,8 +34,9 @@ export const notesService = {
     return data;
   },
 
+  // EDITAR NOTA
   editNote: async (id: number, formData: FormData) => {
-    const response = await fetch(`${API_URL}/notes/${id}`, {
+    const response = await fetch(`${VITE_API_URL}/notes/${id}`, {
       method: 'PUT',
       body: formData,
       credentials: 'include', 
@@ -33,8 +50,9 @@ export const notesService = {
     return data;
   },
 
+  // ELIMINAR NOTA
   deleteNote: async (id: number) => {
-    const response = await fetch(`${API_URL}/notes/${id}`, {
+    const response = await fetch(`${VITE_API_URL}/notes/${id}`, {
       method: 'DELETE',
       credentials: 'include', 
     });
