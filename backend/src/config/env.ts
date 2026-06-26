@@ -4,6 +4,7 @@ export const env = {
   PORT: Number(process.env.PORT || 4000),
   NODE_ENV: process.env.NODE_ENV || 'development',
   CLIENT_URL: process.env.CLIENT_URL || 'http://localhost:5173',
+  FRONTEND_URL: process.env.FRONTEND_URL || 'http://localhost:5173',
 
   DB_HOST: process.env.DB_HOST || '127.0.0.1',
   DB_PORT: Number(process.env.DB_PORT || 3306),
@@ -15,6 +16,10 @@ export const env = {
   SESSION_NAME: process.env.SESSION_NAME || 'cde.sid',
 
   UPLOAD_DIR: process.env.UPLOAD_DIR || 'uploads',
+  
+  CLOUDINARY_CLOUD_NAME: process.env.CLOUDINARY_CLOUD_NAME || '',
+  CLOUDINARY_API_KEY: process.env.CLOUDINARY_API_KEY || '',
+  CLOUDINARY_API_SECRET: process.env.CLOUDINARY_API_SECRET || '',
 
   MAILGUN_API_KEY: process.env.MAILGUN_API_KEY || '',
   MAILGUN_DOMAIN: process.env.MAILGUN_DOMAIN || '',
@@ -22,7 +27,4 @@ export const env = {
   CONTACT_TO_EMAIL: process.env.CONTACT_TO_EMAIL || '',
   MAILGUN_REGION: process.env.MAILGUN_REGION || 'US',
 
-  CLOUDINARY_CLOUD_NAME: process.env.CLOUDINARY_CLOUD_NAME || '',
-  CLOUDINARY_API_KEY: process.env.CLOUDINARY_API_KEY || '',
-  CLOUDINARY_API_SECRET: process.env.CLOUDINARY_API_SECRET || ''
 };

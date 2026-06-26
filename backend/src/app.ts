@@ -3,6 +3,7 @@ import cors from 'cors';
 import path from 'path';
 import session from 'express-session';
 import { env } from './config/env';
+import { notFoundHandler, errorHandler } from './middlewares/error.middleware';
 
 import authRoutes from './modules/auth/auth.routes';
 import notesRoutes from './modules/notes/notes.routes';
@@ -44,5 +45,8 @@ app.get('/api/health', (_, res) => {
 app.use('/api/auth', authRoutes);
 app.use('/api/notes', notesRoutes);
 app.use('/api/contact', contactRoutes);
+
+app.use(notFoundHandler);
+app.use(errorHandler);
 
 export default app;
