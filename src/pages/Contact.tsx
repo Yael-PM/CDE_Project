@@ -1,4 +1,5 @@
 import { useState, type ChangeEvent, type FormEvent } from "react";
+import toast, { Toaster } from "react-hot-toast";
 import { useTranslation } from "react-i18next"
 import { Link } from 'react-router-dom'
 
@@ -41,7 +42,17 @@ const Contact = () => {
     const success = await sendForm(formData);
 
     if (success) {
-      alert("¡Mensaje enviado con éxito! Nos pondremos en contacto pronto.");
+
+
+      toast.success('¡Mensaje enviado con éxito! Nos pondremos en contacto pronto.', {
+        style: {
+          borderRadius: '12px',
+          background: '#333',
+          color: '#fff',
+          fontFamily: 'sans-serif'
+        },
+      })
+
       // Limpiamos el formulario restableciendo el estado
       setFormData({
         fullName: "",
@@ -55,7 +66,14 @@ const Contact = () => {
       });
       // Si tienes un input checkbox de privacidad, se puede resetear de forma nativa o con otro estado
     } else {
-      alert("Hubo un problema al enviar tu mensaje. Por favor, inténtalo de nuevo.");
+      toast.error('Hubo un problema al enviar tu mensaje. Por favor, inténtalo de nuevo.', {
+        style: {
+          borderRadius: '12px',
+          background: '#333',
+          color: '#fff',
+          fontFamily: 'sans-serif'
+        },
+      });
     }
   };
 
@@ -68,6 +86,7 @@ const Contact = () => {
   return (
     // min-h-screen aquí asegura que el fondo cubra todo y el footer baje
     <main className="bg-neutral-200 min-h-screen flex flex-col">
+      <Toaster position="top-right" reverseOrder={false} />
       <SEO
         title="Contacto - CDE"
         description="Ponte en contacto con nosotros para obtener más información sobre nuestros servicios y cómo podemos ayudarte."
@@ -190,7 +209,7 @@ const Contact = () => {
                     name="company"
                     value={formData.company}
                     onChange={handleChange}
-                    placeholder={t('contact.form-email-placeholder')} required />
+                    placeholder={t('contact.form-company-placeholder')} required />
                 </div>
 
                 {/* Correo */}
@@ -214,7 +233,7 @@ const Contact = () => {
                     name="phone"
                     value={formData.phone}
                     onChange={handleChange}
-                    placeholder={t('contact.form-email-placeholder')} />
+                    placeholder={t('contact.form-phone-placeholder')} />
                 </div>
               </div>
 
@@ -290,6 +309,7 @@ const Contact = () => {
                   className="bg-tertiary-500 hover:bg-primary-600 text-white flex items-center justify-center gap-2 px-4 py-3 rounded-xl border border-tertiary-300 focus:border-blue-500 outline-none transition-all resize-none"
                 >
                   {isSending ? "Enviando..." : t('contact.form-btn')} <IoMdSend />
+
                 </button>
               </div>
 

@@ -1,4 +1,5 @@
 import { useState, useRef} from "react";
+import toast, { Toaster } from "react-hot-toast";
 import CustomButton from "../components/CustomButton";
 import Pagination from "../components/Pagination";
 import { ROUTES } from '../routes'
@@ -90,9 +91,23 @@ const ManageNotes = () => {
                 prevNotes.map((n) => (n.note_id === selectedNote.note_id ? { ...n, note_title: editTitle } : n))
             );
             setIsModalOpen(false);
-            alert("Nota actualizada con éxito");
+            toast.success('Nota editada exitosamente.', {
+                style: {
+                    borderRadius: '12px',
+                    background: '#333',
+                    color: '#fff',
+                    fontFamily: 'sans-serif'
+                },
+            });
         } else {
-            alert("Hubo un error al actualizar la nota");
+            toast.error('Hubo un error al actualizar la nota', {
+                style: {
+                    borderRadius: '12px',
+                    background: '#333',
+                    color: '#fff',
+                    fontFamily: 'sans-serif'
+                },
+            });
         }
     };
 
@@ -104,8 +119,24 @@ const ManageNotes = () => {
         if (success) {
             setNotes((prevNotes) => prevNotes.filter((note) => note.note_id !== noteToDelete));
             setNoteToDelete(null); // Cerramos el modal
+            toast.success('Nota eliminada exitosamente.', {
+                style: {
+                    borderRadius: '12px',
+                    background: '#333',
+                    color: '#fff',
+                    fontFamily: 'sans-serif'
+                },
+            });
+            
         } else {
-            alert('No se pudo eliminar la nota. Inténtalo de nuevo.');
+            toast.error('No se pudo eliminar la nota. Inténtalo de nuevo.', {
+                style: {
+                    borderRadius: '12px',
+                    background: '#333',
+                    color: '#fff',
+                    fontFamily: 'sans-serif'
+                },
+            });
         }
     };
 
@@ -114,6 +145,7 @@ const ManageNotes = () => {
 
     return (
         <main className="bg-neutral-200 min-h-screen flex flex-col pb-10">
+            <Toaster position="top-center" reverseOrder={false} />
             <SEO title="Gestión de Notas - CDE" description="Administra y organiza el contenido informático de las rutas corporativas." />
 
             {/* Hero section */}
