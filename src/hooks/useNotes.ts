@@ -1,35 +1,13 @@
 import { useState, useEffect } from 'react';
 import { notesService } from '../services/notes.service';
-import type { Note } from '../types/notes.types';
+import { useBlog } from '../contexts/blog.context';
 
 export const useFetchNotes = () => {
-  const [notes, setNotes] = useState<Note[]>([]);
-  const [loading, setLoading] = useState<boolean>(true);
-  const [error, setError] = useState<string | null>(null);
 
-  const fetchNotes = async () => {
-    setLoading(true);
-    setError(null);
-    try {
-      const result = await notesService.getNotes();
-      setNotes(result.data);
-    } catch (err: unknown) {
-      if (err instanceof Error) {
-        setError(err.message);
-      } else {
-        setError('Ocurrió un error inesperado al cargar las notas');
-      }
-    } finally {
-      setLoading(false);
-    }
-  };
-
-  useEffect(() => {
-    fetchNotes();
-  }, []);
+  const {notes, setNotes, loading, error, refetchNotes } = useBlog();
 
   // Retornamos setNotes para poder actualizar la UI optimísticamente en ManageNotes
-  return { notes, setNotes, loading, error, refetch: fetchNotes };
+  return { notes, setNotes, loading, error, refetch: refetchNotes };
 };
 
 interface CreateNoteArgs {
