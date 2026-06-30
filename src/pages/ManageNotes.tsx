@@ -1,4 +1,4 @@
-import { useState, useRef} from "react";
+import { useState, useRef } from "react";
 import toast, { Toaster } from "react-hot-toast";
 import CustomButton from "../components/CustomButton";
 import Pagination from "../components/Pagination";
@@ -127,7 +127,7 @@ const ManageNotes = () => {
                     fontFamily: 'sans-serif'
                 },
             });
-            
+
         } else {
             toast.error('No se pudo eliminar la nota. Inténtalo de nuevo.', {
                 style: {
@@ -290,7 +290,65 @@ const ManageNotes = () => {
                                 </div>
                                 <div>
                                     <label className="block text-sm font-semibold text-gray-700 mb-1">Cambiar Imagen (Opcional)</label>
-                                    <input type="file" accept="image/*" onChange={(e) => setEditImage(e.target.files?.[0])} className="w-full text-sm text-gray-500 file:mr-4 file:py-2 file:px-4 file:rounded-full file:border-0 file:text-sm file:font-semibold file:bg-blue-50 file:text-blue-700 hover:file:bg-blue-100" />
+                                    {/* Sección de Imagen dentro del Formulario */}
+                                    <div className="flex flex-col gap-2">
+                                        <label className="block text-sm font-semibold text-gray-700">
+                                            Imagen de la nota
+                                        </label>
+
+                                        {/* Contenedor de Previsualización */}
+                                        <div className="flex items-center gap-4 p-3 bg-gray-50 border border-gray-200 rounded-lg">
+                                            {/* Prioridad 1: Si hay una nueva imagen seleccionada localmente */}
+                                            {editImage ? (
+                                                <div className="relative w-20 h-20 bg-gray-200 rounded-md overflow-hidden flex-shrink-0">
+                                                    <img
+                                                        src={URL.createObjectURL(editImage)}
+                                                        alt="Nueva vista previa"
+                                                        className="w-full h-full object-cover"
+                                                    />
+                                                    <span className="absolute bottom-0 inset-x-0 bg-blue-600 text-[10px] text-white text-center font-bold py-0.5">
+                                                        Nueva
+                                                    </span>
+                                                </div>
+                                            ) : selectedNote?.image_reference ? (
+                                                <div className="relative w-20 h-20 bg-gray-200 rounded-md overflow-hidden flex-shrink-0">
+                                                    <img
+                                                        src={selectedNote.image_reference}
+                                                        alt="Imagen actual"
+                                                        className="w-full h-full object-cover"
+                                                    />
+                                                    <span className="absolute bottom-0 inset-x-0 bg-gray-700 text-[10px] text-white text-center font-bold py-0.5">
+                                                        Actual
+                                                    </span>
+                                                </div>
+                                            ) : (
+                                                /* Fallback: Si la nota no tenía imagen original ni se ha subido una nueva */
+                                                <div className="w-20 h-20 bg-gray-200 border-2 border-dashed border-gray-300 rounded-md flex items-center justify-center text-xs text-gray-400 font-medium text-center p-1 flex-shrink-0">
+                                                    Sin imagen
+                                                </div>
+                                            )}
+
+                                            {/* El input de tipo File al lado de la imagen */}
+                                            <div className="flex-1">
+                                                <input
+                                                    type="file"
+                                                    accept="image/*"
+                                                    onChange={(e) => setEditImage(e.target.files?.[0])}
+                                                    className="w-full text-sm text-gray-500 file:mr-4 file:py-2 file:px-4 file:rounded-full file:border-0 file:text-sm file:font-semibold file:bg-blue-50 file:text-blue-700 hover:file:bg-blue-100"
+                                                />
+                                                {editImage && (
+                                                    <button
+                                                        type="button"
+                                                        onClick={() => setEditImage(undefined)}
+                                                        className="text-xs text-red-500 hover:underline mt-1 block"
+                                                    >
+                                                        Deshacer cambio de imagen
+                                                    </button>
+                                                )}
+                                            </div>
+                                        </div>
+                                    </div>
+
                                 </div>
                                 <div className="flex justify-end gap-3 mt-4 border-t pt-4">
                                     <CustomButton variant="primary" onClick={() => setIsModalOpen(false)} className="px-4 py-2 rounded-lg bg-gray-200 text-gray-800 hover:bg-gray-300">Cancelar</CustomButton>
