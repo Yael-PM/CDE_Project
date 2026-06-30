@@ -1,28 +1,43 @@
-import { useState, type ChangeEvent } from "react";
+import { useState, useRef} from "react";
 import CustomButton from "../components/CustomButton";
 import Pagination from "../components/Pagination";
 import { ROUTES } from '../routes'
+import { useBlog } from "../contexts/blog.context";
 
 import { FaPlus, FaPencil, FaRegTrashCan } from "react-icons/fa6";
+import { FaCalendarAlt, FaSearch } from "react-icons/fa";
 import { Link } from "react-router-dom";
 import SEO from "../components/SEO";
 
-import { useFetchNotes, useEditNote, useDeleteNote } from "../hooks/useNotes"; // Importamos el hook
+import { useFetchNotes, useEditNote, useDeleteNote, useNoteFilters } from "../hooks/useNotes"; // Importamos el hook
 import type { Note } from '../types/notes.types';
 
 const NOTES_PER_PAGE = 5;
 
 const ManageNotes = () => {
     // 1. Extraemos toda la data y lógica del nuevo hook
-    const { notes, setNotes, loading, error } = useFetchNotes();
+    const { notes, setNotes, loading, error } = useBlog();
 
     const [currentPage, setCurrentPage] = useState<number>(1);
-    const [search, setSearch] = useState<string>("");
+
+    // Lógica de filtado del hook
+    const {
+        search,
+        setSearch,
+        filterMode,
+        filterValue,
+        setFilterValue,
+        filteredNotes,
+        handleModeChange
+    } = useNoteFilters(notes);
+
+    // Referencia para el calendario invisible
+    const dateInputRef = useRef<HTMLInputElement>(null);
 
     // Hooks: editar y eliminar nota
     const { updateExistingNote, isUpdating } = useEditNote();
     const { deleteExistingNote, isDeleting } = useDeleteNote(); // deleteError se puede extraer si se necesita
-    
+
     // Estados para el Modal
     const [isModalOpen, setIsModalOpen] = useState<boolean>(false);
     const [selectedNote, setSelectedNote] = useState<Note | null>(null);
@@ -33,22 +48,12 @@ const ManageNotes = () => {
 
     const [noteToDelete, setNoteToDelete] = useState<number | null>(null);
 
-    // Lógica de filtrado y paginación
-    const filtered = notes.filter((note) =>
-        note.note_title.toLowerCase().includes(search.toLowerCase())
-    );
+    const totalPages = Math.ceil(filteredNotes.length / NOTES_PER_PAGE);
 
-    const totalPages = Math.ceil(filtered.length / NOTES_PER_PAGE);
-
-    const paginated = filtered.slice(
+    const paginated = filteredNotes.slice(
         (currentPage - 1) * NOTES_PER_PAGE,
         currentPage * NOTES_PER_PAGE
     );
-
-    const handleSearch = (e: ChangeEvent<HTMLInputElement>) => {
-        setSearch(e.target.value);
-        setCurrentPage(1);
-    };
 
     const formatDate = (dateString: string) => {
         const date = new Date(dateString);
@@ -64,7 +69,7 @@ const ManageNotes = () => {
         setEditTitle(note.note_title);
         setEditDescription(note.note_description || "");
         setEditUrl(note.url_reference || "");
-        setEditImage(undefined); 
+        setEditImage(undefined);
         setIsModalOpen(true);
     };
 
@@ -110,7 +115,7 @@ const ManageNotes = () => {
     return (
         <main className="bg-neutral-200 min-h-screen flex flex-col pb-10">
             <SEO title="Gestión de Notas - CDE" description="Administra y organiza el contenido informático de las rutas corporativas." />
-            
+
             {/* Hero section */}
             <section className="mx-5 md:mx-10 py-10">
                 <h1 className="text-4xl md:text-6xl font-extrabold text-slate-900 leading-[1.1] mb-4">Gestión de notas</h1>
@@ -125,13 +130,79 @@ const ManageNotes = () => {
                 </div>
             </section>
 
-            {/* Buscador */}
-            <div className="mx-5 md:mx-10 mb-5 max-w-md">
-                <div className="bg-gray-300 rounded-full flex items-center px-4 py-2">
-                    
-                    <input id="buscar" type="text" placeholder="Buscar nota..." value={search} onChange={handleSearch} className="w-full bg-transparent border-none outline-none text-gray-700 placeholder-gray-500" />
+            {/* Controles de Filtro y Búsqueda */}
+            <section className="mx-5 md:mx-10 mb-5">
+                <div className='grid grid-cols-1 lg:grid-cols-2 gap-4 items-center'>
+
+                    {/* Columna Izquierda: Botones de Modo y Calendario */}
+                    <div className='flex flex-wrap md:flex-nowrap items-center gap-2'>
+                        <div className="flex bg-gray-200 p-1 rounded-full gap-1 text-sm font-medium text-gray-600 shadow-inner">
+                            <CustomButton variant="none" onClick={() => { handleModeChange('all'); setCurrentPage(1); }} className={`px-4 py-1.5 rounded-full transition-all ${filterMode === 'all' ? 'bg-white text-slate-900 shadow-sm' : 'hover:text-slate-900'}`}>Todos</CustomButton>
+                            <CustomButton variant="none" onClick={() => { handleModeChange('day'); setCurrentPage(1); }} className={`px-4 py-1.5 rounded-full transition-all ${filterMode === 'day' ? 'bg-white text-slate-900 shadow-sm' : 'hover:text-slate-900'}`}>Por Día</CustomButton>
+                            <CustomButton variant="none" onClick={() => { handleModeChange('month'); setCurrentPage(1); }} className={`px-4 py-1.5 rounded-full transition-all ${filterMode === 'month' ? 'bg-white text-slate-900 shadow-sm' : 'hover:text-slate-900'}`}>Por Mes</CustomButton>
+                        </div>
+
+                        {filterMode !== 'all' && (
+                            <div
+                                onClick={() => filterMode === 'day' && dateInputRef.current?.showPicker()}
+                                className="relative bg-gray-300 rounded-full flex items-center py-2 px-4 animate-fade-in w-full md:w-auto gap-2 min-h-[40px] cursor-pointer"
+                            >
+                                {filterMode === 'day' ? (
+                                    <>
+                                        <FaCalendarAlt size={16} className="text-gray-500 flex-shrink-0" />
+                                        <span className="text-gray-700 text-sm select-none pr-4">
+                                            {filterValue
+                                                ? (() => {
+                                                    const [year, month, day] = filterValue.split('-');
+                                                    return `${day}/${month}/${year}`;
+                                                })()
+                                                : 'Seleccione el día'}
+                                        </span>
+                                        <input
+                                            ref={dateInputRef}
+                                            type="date"
+                                            value={filterValue}
+                                            onChange={(e) => {
+                                                setFilterValue(e.target.value);
+                                                setCurrentPage(1);
+                                            }}
+                                            className="absolute inset-0 w-full h-full opacity-0 pointer-events-none"
+                                        />
+                                    </>
+                                ) : (
+                                    <input
+                                        type="text"
+                                        value={filterValue}
+                                        onChange={(e) => {
+                                            setFilterValue(e.target.value);
+                                            setCurrentPage(1);
+                                        }}
+                                        placeholder="Ej: Ene, Junio..."
+                                        className="bg-transparent border-none outline-none text-gray-700 w-full text-sm placeholder-gray-500"
+                                    />
+                                )}
+                            </div>
+                        )}
+                    </div>
+
+                    {/* Columna Derecha: Buscador de Texto (Alineado a la derecha en pantallas grandes) */}
+                    <div className="bg-gray-300 rounded-full flex items-center py-2 px-4 w-full lg:max-w-md lg:justify-self-end">
+                        <label htmlFor="buscar" className="text-gray-500 mr-3 flex items-center"><FaSearch size={18} /></label>
+                        <input
+                            id="buscar"
+                            type="text"
+                            placeholder="Buscar nota..."
+                            value={search}
+                            onChange={(e) => {
+                                setSearch(e.target.value);
+                                setCurrentPage(1);
+                            }}
+                            className="w-full bg-transparent border-none outline-none text-gray-700 placeholder-gray-500"
+                        />
+                    </div>
+
                 </div>
-            </div>
+            </section>
 
             {/* Tabla */}
             <section className="mx-5 md:mx-10 my-5">
