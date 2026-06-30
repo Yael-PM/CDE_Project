@@ -186,7 +186,7 @@ export const forgotPassword = async (req: Request, res: Response) => {
     const emailData = {
       from: env.MAILGUN_FROM,
       to: [user.email],
-      subject: 'Restablecimiento de contraseña CDE',
+      subject: 'Restablecimiento de contraseña - Soluciones Integrales',
       text: `
           Restablecimiento de contraseña
 
@@ -202,23 +202,52 @@ export const forgotPassword = async (req: Request, res: Response) => {
           Si tú no solicitaste este cambio, puedes ignorar este correo.
       `.trim(),
       html: `
-        <div style="font-family: Arial, sans-serif; line-height: 1.6;">
-          <h2>Restablecimiento de contraseña</h2>
+        <div style="background-color: #f4f7f6; padding: 40px 0; font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Helvetica, Arial, sans-serif;">
+          <table align="center" border="0" cellpadding="0" cellspacing="0" width="100%" style="max-width: 600px; background-color: #ffffff; border-radius: 12px; overflow: hidden; box-shadow: 0 4px 15px rgba(0,0,0,0.05);">
+            <tr>
+              <td align="center" bgcolor="#0b132b" style="padding: 40px 20px;">
+                <h1 style="color: #ffffff; margin: 0; font-size: 24px; font-weight: bold; letter-spacing: 0.5px;">
+                  Recuperación de Contraseña
+                </h1>
+              </td>
+            </tr>
+            
+            <tr>
+              <td style="padding: 40px 30px;">
+                <p style="color: #1c2541; font-size: 16px; margin-bottom: 20px; font-weight: 500;">
+                  Hola ${user.first_name},
+                </p>
+                <p style="color: #4b5563; font-size: 15px; margin-bottom: 30px; line-height: 1.6;">
+                  Hemos recibido una solicitud para restablecer la contraseña de tu cuenta. Si fuiste tú, haz clic en el siguiente botón para crear una nueva contraseña.
+                </p>
+                
+                <table width="100%" border="0" cellspacing="0" cellpadding="0">
+                  <tr>
+                    <td align="center" style="padding-bottom: 30px;">
+                      <a href="${resetUrl}" style="background-color: #38bdf8; color: #ffffff; padding: 14px 30px; text-decoration: none; border-radius: 8px; font-size: 16px; font-weight: bold; display: inline-block;">
+                        Restablecer mi contraseña
+                      </a>
+                    </td>
+                  </tr>
+                </table>
 
-          <p>Hola ${user.first_name},</p>
+                <p style="color: #6b7280; font-size: 14px; margin-bottom: 10px;">
+                  <em>Este enlace es válido por 1 hora.</em>
+                </p>
+                <p style="color: #9ca3af; font-size: 13px; line-height: 1.5; margin: 0;">
+                  Si no solicitaste este cambio, no es necesario realizar ninguna acción y tu cuenta sigue segura.
+                </p>
+              </td>
+            </tr>
 
-          <p>Recibimos una solicitud para restablecer tu contraseña.</p>
-
-          <p>
-            <a href="${resetUrl}"
-               style="display:inline-block;padding:12px 18px;background:#003b73;color:#ffffff;text-decoration:none;border-radius:6px;">
-              Restablecer contraseña
-            </a>
-          </p>
-
-          <p>Este enlace expirará en 1 hora.</p>
-
-          <p>Si tú no solicitaste este cambio, puedes ignorar este correo.</p>
+            <tr>
+              <td align="center" bgcolor="#f8fafc" style="padding: 20px; border-top: 1px solid #e2e8f0;">
+                <p style="color: #94a3b8; font-size: 12px; margin: 0;">
+                  © ${new Date().getFullYear()} Soluciones Integrales. Todos los derechos reservados.
+                </p>
+              </td>
+            </tr>
+          </table>
         </div>
       `
     };
