@@ -51,3 +51,39 @@ export async function getMe(): Promise<UserData> {
   // Retornamos SOLAMENTE el objeto user
   return data.user; 
 }
+
+export const forgotPasswordService = async (email: string) => {
+    const response = await fetch(`${VITE_API_URL}/auth/forgot-password`, {
+        method: 'POST',
+        headers: {
+            'Content-Type': 'application/json',
+        },
+        body: JSON.stringify({ email }),
+    });
+
+    const data = await response.json();
+
+    if (!response.ok) {
+        throw new Error(data.message || 'Ocurrió un error al procesar la solicitud');
+    }
+
+    return data;
+};
+
+export const resetPasswordService = async (token: string, password: string) => {
+    const response = await fetch(`${VITE_API_URL}/auth/reset-password`, {
+        method: 'POST',
+        headers: {
+            'Content-Type': 'application/json',
+        },
+        body: JSON.stringify({ token, password }),
+    });
+
+    const data = await response.json();
+
+    if (!response.ok) {
+        throw new Error(data.message || 'Error al restablecer la contraseña');
+    }
+
+    return data;
+};

@@ -40,7 +40,7 @@ const router = createBrowserRouter([
       {path: '/terms-and-conditions', element: <TermsAndConditions/>},
       {path: '/privacy-notice', element: <PrivacyNotice/>},
       {path: '/forgot-password', element: <ForgotPassword/>},
-      {path: '/reset-password/:token', element: <ResetPassword/>},  // Ruta para resetear contraseña con token
+      {path: '/reset-password', element: <ResetPassword/>},  // Ruta para resetear contraseña con token
       // Rutas Protegidas (Envueltas en el ProtectedRoute)
       {
         element: <ProtectedRoute />,

@@ -7,20 +7,18 @@ import { ROUTES } from '../routes'
 import SEO from '../components/SEO'
 
 const ForgotPassword = () => {
-    // Asumimos que agregarás requestPasswordReset a tu useAuth
-    const { requestPasswordReset } = useAuth()
-    const [loading, setLoading] = useState(false)
+    // 1. Ahora extraemos requestPasswordReset y 'loading' directamente de tu hook
+    const { requestPasswordReset, loading } = useAuth() 
     const [emailSent, setEmailSent] = useState(false)
 
     const handleSubmit = async (e: React.FormEvent<HTMLFormElement>) => {
         e.preventDefault()
-        setLoading(true)
         
         const formData = new FormData(e.currentTarget)
         const email = formData.get('email') as string
 
         try {
-            await requestPasswordReset(email)
+            await requestPasswordReset(email) // El hook ya cambia el estado de 'loading'
             setEmailSent(true)
             toast.success('Correo de recuperación enviado', {
                 style: { borderRadius: '12px', background: '#333', color: '#fff' }
@@ -28,8 +26,6 @@ const ForgotPassword = () => {
         } catch (err) {
             const error = err as Error;
             toast.error(error.message || 'Error al enviar el correo');
-        } finally {
-            setLoading(false)
         }
     }
 
@@ -59,7 +55,12 @@ const ForgotPassword = () => {
                             </p>
                             <form onSubmit={handleSubmit} className="w-full flex flex-col gap-6">
                                 <div className="w-full">
+                                    {/* 2. Etiqueta label conectada al id del input para solucionar el warning */}
+                                    <label htmlFor="user-email" className="sr-only">
+                                        Correo electrónico
+                                    </label>
                                     <input 
+                                        id="user-email"
                                         name="email"
                                         type="email" 
                                         required

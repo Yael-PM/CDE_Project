@@ -57,12 +57,36 @@ export function useAuth() {
     }
   };
 
+  // 1. Función para solicitar el correo
+  const requestPasswordReset = async (email: string) => {
+    setLoading(true);
+    try {
+      const response = await authService.forgotPasswordService(email);
+      return response;
+    } finally {
+      setLoading(false);
+    }
+  };
+
+  // 2. Función para guardar la nueva contraseña
+  const resetPassword = async (token: string, password: string) => {
+    setLoading(true);
+    try {
+      const response = await authService.resetPasswordService(token, password);
+      return response;
+    } finally {
+      setLoading(false);
+    }
+  };
+
   return {
     user,
     loading,
     isAuthenticated: !!user,
     login,
     logout,
-    fetchMe
+    fetchMe,
+    requestPasswordReset,
+    resetPassword
   };
 }

@@ -1,16 +1,26 @@
 import { useState } from 'react'
 import banerBg from '/aboutUsBanerBg.jpg'
-import { useNavigate, useParams } from 'react-router-dom'
+import { useNavigate, useSearchParams } from 'react-router-dom'
 import { useAuth } from '../hooks/useAuth' 
 import toast, { Toaster } from 'react-hot-toast'
 import { ROUTES } from '../routes'
 import SEO from '../components/SEO'
+import { Eye, EyeOff } from 'lucide-react'
 
 const ResetPassword = () => {
-    const { token } = useParams<{ token: string }>() // Obtiene el token de la URL
-    const { resetPassword } = useAuth() // Asumimos que agregarás este método
+    // 1. Extraemos los parámetros de búsqueda de la URL
+    const [searchParams] = useSearchParams()
+    const token = searchParams.get('token') // Así obtenemos el valor de "?token=..."
+    const [showPassword, setShowPassword] = useState(false)
+    const [showConfirmPassword, setShowConfirmPassword] = useState(false)
+    
+    // Asumimos que requestPasswordReset devuelve loading y resetPassword
+    const { resetPassword, loading: authLoading } = useAuth() 
     const navigate = useNavigate()
-    const [loading, setLoading] = useState(false)
+    const [localLoading, setLocalLoading] = useState(false)
+
+    // Usamos el loading del hook o el local para deshabilitar botones
+    const isLoading = authLoading || localLoading;
 
     const handleSubmit = async (e: React.FormEvent<HTMLFormElement>) => {
         e.preventDefault()
@@ -24,14 +34,14 @@ const ResetPassword = () => {
             return;
         }
 
-        if (password.length < 6) {
-            toast.error("La contraseña debe tener al menos 6 caracteres");
+        if (password.length < 8) { // Actualizado a 8 para coincidir con la validación de tu backend
+            toast.error("La contraseña debe tener al menos 8 caracteres");
             return;
         }
 
         try {
-            setLoading(true)
-            // Llama a tu backend con el nuevo password y el token de la URL
+            setLocalLoading(true)
+            // Llama a tu backend con el nuevo password y el token
             await resetPassword(token as string, password)
             
             toast.success('Contraseña actualizada con éxito', {
@@ -44,10 +54,11 @@ const ResetPassword = () => {
             const error = err as Error;
             toast.error(error.message || 'Error al restablecer la contraseña');
         } finally {
-            setLoading(false)
+            setLocalLoading(false)
         }
     }
 
+    // 2. Si alguien entra a la página sin el ?token= en la URL, le mostramos el error
     if (!token) {
         return (
             <div className="h-screen flex justify-center items-center bg-gray-100">
@@ -79,37 +90,50 @@ const ResetPassword = () => {
                     </p>
 
                     <form onSubmit={handleSubmit} className="w-full flex flex-col gap-5">
-                        <div className="w-full">
+                        <div className="relative w-full">
+                            <label htmlFor="new-password" className="sr-only">Nueva contraseña</label>
                             <input 
+                                id="new-password"
                                 name="password"
-                                type="password" 
+                                type={showPassword ? "text" : "password"} // Cambia el tipo
                                 required
-                                disabled={loading}
+                                disabled={isLoading}
                                 placeholder="Nueva contraseña" 
-                                className="w-full p-3 rounded-xl border border-gray-300 shadow-inner focus:outline-none focus:ring-2 focus:ring-cyan-400 transition-all bg-gray-50/50 disabled:opacity-50"
+                                className="w-full p-3 pr-12 rounded-xl border border-gray-300 shadow-inner focus:outline-none focus:ring-2 focus:ring-cyan-400 bg-gray-50/50"
                             />
-                        </div>
-
-                        <div className="w-full">
-                            <input 
-                                name="confirmPassword"
-                                type="password" 
-                                required
-                                disabled={loading}
-                                placeholder="Confirmar nueva contraseña" 
-                                className="w-full p-3 rounded-xl border border-gray-300 shadow-inner focus:outline-none focus:ring-2 focus:ring-cyan-400 transition-all bg-gray-50/50 disabled:opacity-50"
-                            />
-                        </div>
-
-                        <div className="mt-4 flex justify-center">
                             <button 
-                                type="submit"
-                                disabled={loading}
-                                className="w-full py-2.5 bg-linear-to-r from-cyan-400 to-sky-400 text-white font-semibold rounded-lg shadow-lg hover:shadow-cyan-200/50 hover:scale-105 transition-all duration-200 active:scale-95 disabled:grayscale disabled:cursor-not-allowed"
+                                type="button"
+                                onClick={() => setShowPassword(!showPassword)}
+                                className="absolute right-4 top-3.5 text-gray-400 hover:text-cyan-600"
                             >
-                                {loading ? 'Guardando...' : 'Guardar contraseña'}
+                                {showPassword ? <EyeOff size={20} /> : <Eye size={20} />}
                             </button>
                         </div>
+
+                        {/* Input Confirmar Contraseña */}
+                        <div className="relative w-full">
+                            <label htmlFor="confirm-password" className="sr-only">Confirmar nueva contraseña</label>
+                            <input 
+                                id="confirm-password"
+                                name="confirmPassword"
+                                type={showConfirmPassword ? "text" : "password"}
+                                required
+                                disabled={isLoading}
+                                placeholder="Confirmar nueva contraseña" 
+                                className="w-full p-3 pr-12 rounded-xl border border-gray-300 shadow-inner focus:outline-none focus:ring-2 focus:ring-cyan-400 bg-gray-50/50"
+                            />
+                            <button 
+                                type="button"
+                                onClick={() => setShowConfirmPassword(!showConfirmPassword)}
+                                className="absolute right-4 top-3.5 text-gray-400 hover:text-cyan-600"
+                            >
+                                {showConfirmPassword ? <EyeOff size={20} /> : <Eye size={20} />}
+                            </button>
+                        </div>
+
+                        <button type="submit" disabled={isLoading} className="w-full py-2.5 bg-linear-to-r from-cyan-400 to-sky-400 text-white font-semibold rounded-lg shadow-lg hover:scale-105 transition-all">
+                            {isLoading ? 'Guardando...' : 'Guardar contraseña'}
+                        </button>
                     </form>
                 </div>
             </section>
