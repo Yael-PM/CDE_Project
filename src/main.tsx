@@ -24,6 +24,7 @@ import  ForgotPassword from './pages/ForgotPassword'
 import ProtectedRoute from './components/ProtectedRoute'
 import ResetPassword from './pages/ResetPassword'
 import NotFound from './pages/NotFound'
+import { BlogProvider } from './contexts/blog.context'
 
 const router = createBrowserRouter([
   {
@@ -58,9 +59,11 @@ createRoot(document.getElementById('root')!).render(
   <StrictMode>
     <HelmetProvider>
       <AuthProvider>
-        <Suspense fallback={<div>Loading...</div>}>
-          <RouterProvider router={router} />
-        </Suspense>
+        <BlogProvider>
+          <Suspense fallback={<div>Loading...</div>}>
+            <RouterProvider router={router} />
+          </Suspense>
+        </BlogProvider>
       </AuthProvider>
     </HelmetProvider>
   </StrictMode>,

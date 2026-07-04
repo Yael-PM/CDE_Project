@@ -2,6 +2,7 @@ import React, { useState } from 'react';
 import { LuArrowLeft, LuCloudUpload, LuLink } from 'react-icons/lu';
 import { useNavigate } from 'react-router-dom';
 import { useCreateNote } from '../hooks/useNotes';
+import { useBlog } from '../contexts/blog.context';
 
 import SEO from '../components/SEO';
 
@@ -9,6 +10,8 @@ const CreateNote = () => {
     const navigate = useNavigate();
     const { createNewNote, loading, error, success } = useCreateNote();
     
+    const { refetchNotes } = useBlog();
+
     // Estados del Formulario
     const [title, setTitle] = useState<string>('');
     const [summary, setSummary] = useState<string>('');
@@ -34,6 +37,7 @@ const CreateNote = () => {
         });
 
         if (result) {
+            await refetchNotes();
             setTimeout(() => {
                 navigate('/manage-notes');
             }, 1500);

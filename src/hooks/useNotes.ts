@@ -1,35 +1,14 @@
-import { useState, useEffect } from 'react';
+import { useState, useMemo } from 'react';
 import { notesService } from '../services/notes.service';
+import { useBlog } from '../contexts/blog.context';
 import type { Note } from '../types/notes.types';
 
 export const useFetchNotes = () => {
-  const [notes, setNotes] = useState<Note[]>([]);
-  const [loading, setLoading] = useState<boolean>(true);
-  const [error, setError] = useState<string | null>(null);
 
-  const fetchNotes = async () => {
-    setLoading(true);
-    setError(null);
-    try {
-      const result = await notesService.getNotes();
-      setNotes(result.data);
-    } catch (err: unknown) {
-      if (err instanceof Error) {
-        setError(err.message);
-      } else {
-        setError('Ocurrió un error inesperado al cargar las notas');
-      }
-    } finally {
-      setLoading(false);
-    }
-  };
-
-  useEffect(() => {
-    fetchNotes();
-  }, []);
+  const {notes, setNotes, loading, error, refetchNotes } = useBlog();
 
   // Retornamos setNotes para poder actualizar la UI optimísticamente en ManageNotes
-  return { notes, setNotes, loading, error, refetch: fetchNotes };
+  return { notes, setNotes, loading, error, refetch: refetchNotes };
 };
 
 interface CreateNoteArgs {
@@ -129,4 +108,71 @@ export const useDeleteNote = () => {
   };
 
   return { deleteExistingNote, isDeleting: isLoading, deleteError: error };
+};
+
+export const useNoteFilters = (initialNotes: Note[]) => {
+  const [search, setSearch] = useState<string>("");
+  const [filterMode, setFilterMode] = useState<'all' | 'day' | 'month'>('all');
+  const [filterValue, setFilterValue] = useState<string>("");
+
+  const filteredNotes = useMemo(() => {
+    return initialNotes.filter((note) => {
+      // 1. Filtro por Título (Buscador principal)
+      const matchesSearch = note.note_title
+        ? note.note_title.toLowerCase().includes(search.toLowerCase())
+        : true;
+
+      // Si no hay valor en el filtro de tiempo, pasa directo
+      if (!filterValue || filterMode === 'all') return matchesSearch;
+
+      // Extraemos la fecha de la base de datos
+      const dbDate = note.creation_date || ""; // Ej: "2026-06-20 14:30:00"
+      if (dbDate.length < 10) return false;
+
+      // Modo por día
+      if (filterMode === 'day') {
+        // filterValue viene del calendario como "2026-06-20"
+        // dbDate empieza como "2026-06-20..."
+        // Al usar startsWith, la coincidencia es exacta y perfecta.
+        return matchesSearch && dbDate.startsWith(filterValue);
+      }
+
+      // Modo por mes
+      if (filterMode === 'month') {
+        const month = dbDate.substring(5, 7); // Extrae el "06"
+        const cleanInputValue = filterValue.trim().toLowerCase();
+        
+        const monthsText = [
+          'enero', 'febrero', 'marzo', 'abril', 'mayo', 'junio',
+          'julio', 'agosto', 'septiembre', 'octubre', 'noviembre', 'diciembre'
+        ];
+        const monthIndex = parseInt(month, 10) - 1;
+        const noteMonthName = monthsText[monthIndex] || ""; 
+
+        return matchesSearch && noteMonthName.includes(cleanInputValue);
+      }
+
+      return matchesSearch;
+    });
+  }, [initialNotes, search, filterMode, filterValue]);
+
+  const handleModeChange = (mode: 'all' | 'day' | 'month') => {
+    setFilterMode(mode);
+    setFilterValue(""); 
+  };
+
+  return {
+    search,
+    setSearch,
+    filterMode,
+    filterValue,
+    setFilterValue,
+    filteredNotes,
+    handleModeChange,
+    clearAll: () => {
+      setSearch("");
+      setFilterMode("all");
+      setFilterValue("");
+    }
+  };
 };
