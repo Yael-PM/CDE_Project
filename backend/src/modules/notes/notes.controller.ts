@@ -30,6 +30,7 @@ export const getNotes = async (req: Request, res: Response) => {
              cloudinary_public_id, url_reference, creation_date
       FROM note
     `;
+
     const params: any[] = [];
 
     if (search) {
@@ -43,7 +44,6 @@ export const getNotes = async (req: Request, res: Response) => {
     // Ahora pasamos solo los parámetros del WHERE (si existen)
     const [rows] = await pool.execute<NoteRow[]>(query, params);
 
-    // 2. Construir la consulta para el conteo total
     let countQuery = `SELECT COUNT(*) AS total FROM note`;
     const countParams: any[] = [];
 
@@ -72,16 +72,15 @@ export const getNotes = async (req: Request, res: Response) => {
 
 export const getNoteById = async (req: Request, res: Response) => {
   try {
-    const userId = req.session.user!.userId;
     const noteId = Number(req.params.id);
 
     const [rows] = await pool.execute<NoteRow[]>(
       `SELECT note_id, user_id, note_title, note_description, image_reference,
               cloudinary_public_id, url_reference, creation_date
        FROM note
-       WHERE note_id = ? AND user_id = ?
+       WHERE note_id = ?
        LIMIT 1`,
-      [noteId, userId]
+      [noteId]
     );
 
     const note = rows[0];
