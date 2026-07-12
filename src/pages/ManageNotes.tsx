@@ -10,7 +10,7 @@ import { FaCalendarAlt, FaSearch } from "react-icons/fa";
 import { Link } from "react-router-dom";
 import SEO from "../components/SEO";
 
-import { useFetchNotes, useEditNote, useDeleteNote, useNoteFilters } from "../hooks/useNotes"; // Importamos el hook
+import { useEditNote, useDeleteNote, useNoteFilters } from "../hooks/useNotes"; // Importamos el hook
 import type { Note } from '../types/notes.types';
 
 const NOTES_PER_PAGE = 5;

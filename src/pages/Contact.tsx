@@ -297,7 +297,7 @@ const Contact = () => {
                 <label htmlFor="privacy" className="text-sm text-slate-600 cursor-pointer select-none after:content-['*'] after:ml-0.5 after:text-red-500">
                   {arrFormPrivacy.map((part, i) =>
                     i % 2 === 1
-                      ? <span key={i} className="text-tertiary-500 font-semibold"><Link to='/privacy-policy' target="_blank">{part}</Link></span>
+                      ? <span key={i} className="text-tertiary-500 font-semibold"><Link to='/privacy-notice' target="_blank">{part}</Link></span>
                       : part
                   )}
                 </label>
