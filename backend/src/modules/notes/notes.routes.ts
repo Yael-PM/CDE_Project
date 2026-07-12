@@ -11,9 +11,11 @@ import {
 
 const router = Router();
 
+// Rutas públicas
 router.get('/', getNotes);
+router.get('/:id', getNoteById);
 
-router.get('/:id', requireAuth, getNoteById);
+// Rutas protegidas
 router.post('/', requireAuth, uploadNoteImage.single('image'), createNote);
 router.put('/:id', requireAuth, uploadNoteImage.single('image'), updateNote);
 router.delete('/:id', requireAuth, deleteNote);
