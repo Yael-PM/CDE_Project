@@ -259,13 +259,13 @@ const Contact = () => {
                   onChange={handleChange}
                   required>
                   <option value=''> {t('contact.form-affair-option-default')} </option>
-                  <option value='servicio_1'> {t('services.component-service-1-title')} </option>
-                  <option value='servicio_2'> {t('services.component-service-2-title')} </option>
-                  <option value='servicio_3'> {t('services.component-service-3-title')} </option>
-                  <option value='servicio_4'> {t('services.component-service-4-title')} </option>
-                  <option value='servicio_5'> {t('services.component-service-5-title')} </option>
-                  <option value='servicio_6'> {t('services.component-service-6-title')} </option>
-                  <option value='servicio_7'> {t('services.component-service-7-title')} </option>
+                  <option value='Asuntos Regulatorios'> {t('services.component-service-1-title')} </option>
+                  <option value='Legislación Sanitaria'> {t('services.component-service-2-title')} </option>
+                  <option value='Avisos y Autorizaciones'> {t('services.component-service-3-title')} </option>
+                  <option value='Certificaciones'> {t('services.component-service-4-title')} </option>
+                  <option value='Capacitación Empresarial y de Asociaciones'> {t('services.component-service-5-title')} </option>
+                  <option value='Auditorías'> {t('services.component-service-6-title')} </option>
+                  <option value='Registros Sanitarios'> {t('services.component-service-7-title')} </option>
                 </select>
               </div>
               <div className="flex flex-col mt-4">

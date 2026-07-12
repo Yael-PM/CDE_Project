@@ -186,7 +186,7 @@ export const forgotPassword = async (req: Request, res: Response) => {
     const emailData = {
       from: env.MAILGUN_FROM,
       to: [user.email],
-      subject: 'Restablecimiento de contraseña - Soluciones Integrales',
+      subject: 'Restablecimiento de contraseña - CDE',
       text: `
           Restablecimiento de contraseña
 
@@ -202,48 +202,52 @@ export const forgotPassword = async (req: Request, res: Response) => {
           Si tú no solicitaste este cambio, puedes ignorar este correo.
       `.trim(),
       html: `
-        <div style="background-color: #f4f7f6; padding: 40px 0; font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Helvetica, Arial, sans-serif;">
-          <table align="center" border="0" cellpadding="0" cellspacing="0" width="100%" style="max-width: 600px; background-color: #ffffff; border-radius: 12px; overflow: hidden; box-shadow: 0 4px 15px rgba(0,0,0,0.05);">
+        <div style="background-color: #f8fafc; padding: 40px 0; font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Helvetica, Arial, sans-serif;">
+          <table align="center" border="0" cellpadding="0" cellspacing="0" width="100%" style="max-width: 550px; background-color: #ffffff; border-radius: 16px; overflow: hidden; box-shadow: 0 4px 20px rgba(0,0,0,0.05); border: 1px solid #e2e8f0;">
+            
             <tr>
-              <td align="center" bgcolor="#0b132b" style="padding: 40px 20px;">
-                <h1 style="color: #ffffff; margin: 0; font-size: 24px; font-weight: bold; letter-spacing: 0.5px;">
-                  Recuperación de Contraseña
-                </h1>
+              <td align="center" style="padding: 35px 20px 25px 20px; background-color: #ffffff; border-bottom: 1px solid #f1f5f9;">
+                <img src="https://res.cloudinary.com/dgjtamzk1/image/upload/v1783813292/cde/notes/mwgfpikwz9o7rbpebvet.png?v=2" alt="CDE Logo" style="max-height: 50px; display: block; border: 0;" />
               </td>
             </tr>
             
             <tr>
-              <td style="padding: 40px 30px;">
-                <p style="color: #1c2541; font-size: 16px; margin-bottom: 20px; font-weight: 500;">
+              <td style="padding: 40px 40px 30px 40px;">
+                <h2 style="color: #0f172a; font-size: 20px; font-weight: 700; margin: 0 0 16px 0; text-align: center;">
+                  ¿Olvidaste tu contraseña?
+                </h2>
+                <p style="color: #334155; font-size: 15px; margin-bottom: 12px; font-weight: 500;">
                   Hola ${user.first_name},
                 </p>
-                <p style="color: #4b5563; font-size: 15px; margin-bottom: 30px; line-height: 1.6;">
-                  Hemos recibido una solicitud para restablecer la contraseña de tu cuenta. Si fuiste tú, haz clic en el siguiente botón para crear una nueva contraseña.
+                <p style="color: #64748b; font-size: 15px; margin-bottom: 32px; line-height: 1.6;">
+                  Hemos recibido una solicitud para restablecer la contraseña de tu cuenta en nuestra plataforma de regulación sanitaria. Si fuiste tú, haz clic en el siguiente botón para continuar.
                 </p>
                 
                 <table width="100%" border="0" cellspacing="0" cellpadding="0">
                   <tr>
-                    <td align="center" style="padding-bottom: 30px;">
-                      <a href="${resetUrl}" style="background-color: #38bdf8; color: #ffffff; padding: 14px 30px; text-decoration: none; border-radius: 8px; font-size: 16px; font-weight: bold; display: inline-block;">
+                    <td align="center" style="padding-bottom: 32px;">
+                      <a href="${resetUrl}" style="background-color: #00a8e8; color: #ffffff; padding: 14px 35px; text-decoration: none; border-radius: 8px; font-size: 15px; font-weight: bold; display: inline-block; box-shadow: 0 4px 10px rgba(0, 168, 232, 0.25);">
                         Restablecer mi contraseña
                       </a>
                     </td>
                   </tr>
                 </table>
 
-                <p style="color: #6b7280; font-size: 14px; margin-bottom: 10px;">
-                  <em>Este enlace es válido por 1 hora.</em>
-                </p>
-                <p style="color: #9ca3af; font-size: 13px; line-height: 1.5; margin: 0;">
-                  Si no solicitaste este cambio, no es necesario realizar ninguna acción y tu cuenta sigue segura.
-                </p>
+                <div style="background-color: #fff5f5; border-left: 4px solid #ce2d30; padding: 12px 16px; border-radius: 4px; margin-bottom: 25px;">
+                  <p style="color: #ce2d30; font-size: 13px; margin: 0; line-height: 1.4;">
+                    <strong>Nota de seguridad:</strong> Este enlace es válido únicamente por 1 hora. Si tú no realizaste esta solicitud, puedes ignorar este mensaje de forma segura.
+                  </p>
+                </div>
               </td>
             </tr>
 
             <tr>
-              <td align="center" bgcolor="#f8fafc" style="padding: 20px; border-top: 1px solid #e2e8f0;">
-                <p style="color: #94a3b8; font-size: 12px; margin: 0;">
-                  © ${new Date().getFullYear()} Soluciones Integrales. Todos los derechos reservados.
+              <td align="center" bgcolor="#f8fafc" style="padding: 24px; border-top: 1px solid #e2e8f0;">
+                <p style="color: #94a3b8; font-size: 12px; margin: 0 0 6px 0; font-weight: 600;">
+                  CDE — Expertos en Regulación Sanitaria
+                </p>
+                <p style="color: #b2ccd6; font-size: 11px; margin: 0;">
+                  © ${new Date().getFullYear()} CDE. Todos los derechos reservados.
                 </p>
               </td>
             </tr>
