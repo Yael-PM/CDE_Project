@@ -61,15 +61,8 @@ SHOW COLUMNS FROM `user`;
 SHOW COLUMNS FROM `note`;
 ```
 
-4. Si `user.role` no existe, ejecuta `backend/database/upgrade-existing-database.sql` una sola vez.
-5. Asigna el rol al administrador real:
-
-```sql
-UPDATE `user`
-SET `role` = 'admin'
-WHERE `email` = 'ADMIN_REAL@TU_DOMINIO.COM';
-```
-
+4. Ejecuta `backend/database/upgrade-existing-database.sql` una sola vez para preparar la tabla de sesiones.
+5. Si una versión anterior agregó `user.role`, ejecuta `backend/database/remove-role-column.sql` para retirarla.
 6. Comprueba que el email sea único y que existan `cloudinary_public_id`, `password_reset_token_hash` y `password_reset_expires_at`.
 
 ## 3. Desplegar primero el frontend temporal
@@ -193,9 +186,9 @@ GET  /api/notes
 GET  /api/notes/:id
 POST /api/auth/login
 GET  /api/auth/me
-POST /api/notes              admin
-PUT  /api/notes/:id          admin
-DELETE /api/notes/:id        admin
+POST /api/notes              cuenta autenticada
+PUT  /api/notes/:id          cuenta autenticada
+DELETE /api/notes/:id        cuenta autenticada
 POST /api/contact
 POST /api/auth/forgot-password
 POST /api/auth/reset-password
@@ -204,7 +197,7 @@ POST /api/auth/reset-password
 Verifica además:
 
 - `GET /api/notes` funciona sin sesión.
-- Crear/editar/eliminar devuelve `401` sin sesión y `403` para un usuario sin rol admin.
+- Crear, editar y eliminar devuelve `401` cuando no existe una sesión válida.
 - Una sesión continúa después de reiniciar el backend y aparece en `sessions`.
 - Una imagen nueva aparece en Cloudinary y al sustituir/eliminar una nota no queda la referencia anterior.
 - El enlace del correo abre la página pública `/reset-password`.

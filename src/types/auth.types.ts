@@ -3,7 +3,6 @@ export interface UserData {
   userId: number;
   email: string;
   fullName: string;
-  role: 'admin' | 'user';
 }
 
 // La forma exacta de lo que devuelve el backend

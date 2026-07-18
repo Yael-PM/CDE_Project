@@ -22,22 +22,21 @@ async function main() {
 
   await pool.execute(
     `INSERT INTO user
-      (first_name, last_name, second_last_name, email, password, role)
-     VALUES (?, ?, ?, ?, ?, 'admin')
+      (first_name, last_name, second_last_name, email, password)
+     VALUES (?, ?, ?, ?, ?)
      ON DUPLICATE KEY UPDATE
        first_name = VALUES(first_name),
        last_name = VALUES(last_name),
        second_last_name = VALUES(second_last_name),
-       password = VALUES(password),
-       role = 'admin'`,
+       password = VALUES(password)`,
     [firstName, lastName, secondLastName, email, passwordHash]
   );
 
-  console.log(`Administrador configurado: ${email}`);
+  console.log(`Cuenta de acceso configurada: ${email}`);
   await pool.end();
 }
 
 main().catch((error) => {
-  console.error('No se pudo crear el administrador:', error);
+  console.error('No se pudo crear la cuenta de acceso:', error);
   process.exit(1);
 });

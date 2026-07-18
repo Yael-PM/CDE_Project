@@ -1,5 +1,5 @@
 import { Router } from 'express';
-import { requireAdmin } from '../../middlewares/auth.middleware';
+import { requireAuth } from '../../middlewares/auth.middleware';
 import { uploadNoteImage } from '../../middlewares/upload.middleware';
 import {
   getNotes,
@@ -16,8 +16,8 @@ router.get('/', getNotes);
 router.get('/:id', getNoteById);
 
 // Rutas protegidas
-router.post('/', requireAdmin, uploadNoteImage.single('image'), createNote);
-router.put('/:id', requireAdmin, uploadNoteImage.single('image'), updateNote);
-router.delete('/:id', requireAdmin, deleteNote);
+router.post('/', requireAuth, uploadNoteImage.single('image'), createNote);
+router.put('/:id', requireAuth, uploadNoteImage.single('image'), updateNote);
+router.delete('/:id', requireAuth, deleteNote);
 
 export default router;

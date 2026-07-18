@@ -13,7 +13,6 @@ type UserRow = RowDataPacket & {
   second_last_name: string;
   email: string;
   password: string;
-  role: 'admin' | 'user';
   password_reset_token_hash?: string | null;
   password_reset_expires_at?: Date | null;
 };
@@ -22,7 +21,6 @@ type SessionUser = {
   userId: number;
   email: string;
   fullName: string;
-  role: 'admin' | 'user';
 };
 
 const establishSession = (req: Request, user: SessionUser) =>
@@ -76,8 +74,8 @@ export const register = async (req: Request, res: Response) => {
     const hashedPassword = await bcrypt.hash(password, 12);
 
     const [result] = await pool.execute<ResultSetHeader>(
-      `INSERT INTO user (first_name, last_name, second_last_name, email, password, role)
-       VALUES (?, ?, ?, ?, ?, 'user')`,
+      `INSERT INTO user (first_name, last_name, second_last_name, email, password)
+       VALUES (?, ?, ?, ?, ?)`,
       [first_name, last_name, second_last_name, email, hashedPassword]
     );
 
@@ -86,8 +84,7 @@ export const register = async (req: Request, res: Response) => {
     const sessionUser: SessionUser = {
       userId: result.insertId,
       email,
-      fullName,
-      role: 'user'
+      fullName
     };
 
     await establishSession(req, sessionUser);
@@ -135,8 +132,7 @@ export const login = async (req: Request, res: Response) => {
     const sessionUser: SessionUser = {
       userId: user.user_id,
       email: user.email,
-      fullName,
-      role: user.role
+      fullName
     };
 
     await establishSession(req, sessionUser);

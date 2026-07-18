@@ -5,7 +5,6 @@ CREATE TABLE IF NOT EXISTS `user` (
   `second_last_name` VARCHAR(100) NOT NULL DEFAULT '',
   `email` VARCHAR(255) NOT NULL,
   `password` VARCHAR(255) NOT NULL,
-  `role` ENUM('admin', 'user') NOT NULL DEFAULT 'user',
   `password_reset_token_hash` VARCHAR(64) NULL,
   `password_reset_expires_at` DATETIME NULL,
   `created_at` TIMESTAMP NOT NULL DEFAULT CURRENT_TIMESTAMP,
