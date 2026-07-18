@@ -2,7 +2,7 @@ import React, { useState } from 'react';
 import { LuArrowLeft, LuCloudUpload, LuLink } from 'react-icons/lu';
 import { useNavigate } from 'react-router-dom';
 import { useCreateNote } from '../hooks/useNotes';
-import { useBlog } from '../contexts/blog.context';
+import { useBlog } from '../hooks/useBlog';
 
 import SEO from '../components/SEO';
 

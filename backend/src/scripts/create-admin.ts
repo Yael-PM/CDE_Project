@@ -1,29 +1,43 @@
 import bcrypt from 'bcrypt';
-import mysql from 'mysql2/promise';
-import 'dotenv/config';
+import { pool } from '../config/db';
+
+const requireValue = (name: string) => {
+  const value = process.env[name]?.trim();
+  if (!value) throw new Error(`Falta la variable ${name}`);
+  return value;
+};
 
 async function main() {
-  const connection = await mysql.createConnection({
-    host: process.env.DB_HOST || '127.0.0.1',
-    port: Number(process.env.DB_PORT || 3306),
-    user: process.env.DB_USER || 'root',
-    password: process.env.DB_PASSWORD || '',
-    database: process.env.DB_NAME || 'cde_db'
-  });
+  const firstName = requireValue('ADMIN_FIRST_NAME');
+  const lastName = requireValue('ADMIN_LAST_NAME');
+  const secondLastName = process.env.ADMIN_SECOND_LAST_NAME?.trim() || '';
+  const email = requireValue('ADMIN_EMAIL').toLowerCase();
+  const password = requireValue('ADMIN_PASSWORD');
 
-  const passwordHash = await bcrypt.hash('Admin123*', 12);
+  if (password.length < 12) {
+    throw new Error('ADMIN_PASSWORD debe tener al menos 12 caracteres');
+  }
 
-  await connection.execute(
-    `INSERT INTO user (first_name, last_name, second_last_name, email, password)
-     VALUES (?, ?, ?, ?, ?)`,
-    ['Admin', 'CDE', 'Principal', 'admin@cde.com', passwordHash]
+  const passwordHash = await bcrypt.hash(password, 12);
+
+  await pool.execute(
+    `INSERT INTO user
+      (first_name, last_name, second_last_name, email, password, role)
+     VALUES (?, ?, ?, ?, ?, 'admin')
+     ON DUPLICATE KEY UPDATE
+       first_name = VALUES(first_name),
+       last_name = VALUES(last_name),
+       second_last_name = VALUES(second_last_name),
+       password = VALUES(password),
+       role = 'admin'`,
+    [firstName, lastName, secondLastName, email, passwordHash]
   );
 
-  console.log('Usuario admin creado');
-  await connection.end();
+  console.log(`Administrador configurado: ${email}`);
+  await pool.end();
 }
 
 main().catch((error) => {
-  console.error(error);
+  console.error('No se pudo crear el administrador:', error);
   process.exit(1);
 });

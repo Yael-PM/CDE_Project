@@ -6,7 +6,7 @@ export const ROUTES = {
     MANAGE_NOTES: '/manage-notes',
     CREATE_NOTE: '/create-note',
     FORGOT_PASSWORD: '/forgot-password',
-    RESET_PASSWORD: '/reset-password/:token',
+    RESET_PASSWORD: '/reset-password',
     TERMS_AND_CONDITIONS: '/terms-and-conditions',
     PRIVACY_NOTICE: '/privacy-notice',
     SERVICES: '/services',

@@ -1,9 +1,8 @@
 import type { LoginResponse, UserData } from '../types/auth.types';
-
-const VITE_API_URL = import.meta.env.VITE_API_URL;
+import { API_URL } from '../config/api';
 
 export async function login(email: string, password: string): Promise<LoginResponse> {
-  const res = await fetch(`${VITE_API_URL}/auth/login`, {
+  const res = await fetch(`${API_URL}/auth/login`, {
     method: 'POST',
     headers: { 'Content-Type': 'application/json' },
     body: JSON.stringify({ email, password }),
@@ -12,26 +11,26 @@ export async function login(email: string, password: string): Promise<LoginRespo
 
   if (!res.ok) {
     const err = await res.json();
-    throw new Error(err.error || 'Login failed');
+    throw new Error(err.message || 'No se pudo iniciar sesión');
   }
 
   return res.json();
 }
 
 export async function logout(): Promise<void> {
-  const res = await fetch(`${VITE_API_URL}/auth/logout`, {
+  const res = await fetch(`${API_URL}/auth/logout`, {
     method: 'POST',
     credentials: 'include'
   });
 
   if (!res.ok) {
     const err = await res.json();
-    throw new Error(err.error || 'Logout failed');
+    throw new Error(err.message || 'No se pudo cerrar sesión');
   }
 }
 
 export async function getMe(): Promise<UserData> {
-  const res = await fetch(`${VITE_API_URL}/auth/me`, {
+  const res = await fetch(`${API_URL}/auth/me`, {
     method: 'GET',
     credentials: 'include'
   });
@@ -53,7 +52,7 @@ export async function getMe(): Promise<UserData> {
 }
 
 export const forgotPasswordService = async (email: string) => {
-    const response = await fetch(`${VITE_API_URL}/auth/forgot-password`, {
+    const response = await fetch(`${API_URL}/auth/forgot-password`, {
         method: 'POST',
         headers: {
             'Content-Type': 'application/json',
@@ -71,7 +70,7 @@ export const forgotPasswordService = async (email: string) => {
 };
 
 export const resetPasswordService = async (token: string, password: string) => {
-    const response = await fetch(`${VITE_API_URL}/auth/reset-password`, {
+    const response = await fetch(`${API_URL}/auth/reset-password`, {
         method: 'POST',
         headers: {
             'Content-Type': 'application/json',

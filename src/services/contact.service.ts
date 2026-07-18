@@ -1,12 +1,11 @@
-
-const VITE_API_URL = import.meta.env.VITE_API_URL || 'http://localhost:4000/api';
+import { API_URL } from '../config/api';
 
 export interface ContactData {
   fullName: string;
   company: string;
   corporateEmail: string;
   phone?: string;
-  position?: string;
+  position: string;
   subject: string;
   message: string;
   privacyAccepted: boolean;
@@ -14,7 +13,7 @@ export interface ContactData {
 
 export const contactService = {
   sendContactMessage: async (formData: ContactData) => {
-    const response = await fetch(`${VITE_API_URL}/contact`, {
+    const response = await fetch(`${API_URL}/contact`, {
       method: 'POST',
       headers: {
         'Content-Type': 'application/json', // Le avisamos al servidor que enviamos JSON

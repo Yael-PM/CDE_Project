@@ -24,7 +24,7 @@ import  ForgotPassword from './pages/ForgotPassword'
 import ProtectedRoute from './components/ProtectedRoute'
 import ResetPassword from './pages/ResetPassword'
 import NotFound from './pages/NotFound'
-import { BlogProvider } from './contexts/blog.context'
+import { BlogProvider } from './contexts/blog.provider'
 
 const router = createBrowserRouter([
   {

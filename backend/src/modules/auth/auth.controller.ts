@@ -13,12 +13,37 @@ type UserRow = RowDataPacket & {
   second_last_name: string;
   email: string;
   password: string;
+  role: 'admin' | 'user';
   password_reset_token_hash?: string | null;
   password_reset_expires_at?: Date | null;
 };
 
+type SessionUser = {
+  userId: number;
+  email: string;
+  fullName: string;
+  role: 'admin' | 'user';
+};
+
+const establishSession = (req: Request, user: SessionUser) =>
+  new Promise<void>((resolve, reject) => {
+    req.session.regenerate((regenerateError) => {
+      if (regenerateError) return reject(regenerateError);
+
+      req.session.user = user;
+      req.session.save((saveError) => {
+        if (saveError) return reject(saveError);
+        resolve();
+      });
+    });
+  });
+
 export const register = async (req: Request, res: Response) => {
   try {
+    if (!env.ALLOW_PUBLIC_REGISTRATION) {
+      return res.status(404).json({ message: 'Ruta no encontrada' });
+    }
+
     const first_name = String(req.body.first_name || '').trim();
     const last_name = String(req.body.last_name || '').trim();
     const second_last_name = String(req.body.second_last_name || '').trim();
@@ -51,22 +76,25 @@ export const register = async (req: Request, res: Response) => {
     const hashedPassword = await bcrypt.hash(password, 12);
 
     const [result] = await pool.execute<ResultSetHeader>(
-      `INSERT INTO user (first_name, last_name, second_last_name, email, password)
-       VALUES (?, ?, ?, ?, ?)`,
+      `INSERT INTO user (first_name, last_name, second_last_name, email, password, role)
+       VALUES (?, ?, ?, ?, ?, 'user')`,
       [first_name, last_name, second_last_name, email, hashedPassword]
     );
 
     const fullName = `${first_name} ${last_name} ${second_last_name}`.trim();
 
-    req.session.user = {
+    const sessionUser: SessionUser = {
       userId: result.insertId,
       email,
-      fullName
+      fullName,
+      role: 'user'
     };
+
+    await establishSession(req, sessionUser);
 
     return res.status(201).json({
       message: 'Usuario registrado correctamente',
-      user: req.session.user
+      user: sessionUser
     });
   } catch (error) {
     console.error('register error:', error);
@@ -104,15 +132,18 @@ export const login = async (req: Request, res: Response) => {
 
     const fullName = `${user.first_name} ${user.last_name} ${user.second_last_name}`.trim();
 
-    req.session.user = {
+    const sessionUser: SessionUser = {
       userId: user.user_id,
       email: user.email,
-      fullName
+      fullName,
+      role: user.role
     };
+
+    await establishSession(req, sessionUser);
 
     return res.json({
       message: 'Login exitoso',
-      user: req.session.user
+      user: sessionUser
     });
   } catch (error) {
     console.error('login error:', error);
@@ -133,7 +164,12 @@ export const logout = async (req: Request, res: Response) => {
       return res.status(500).json({ message: 'No se pudo cerrar sesión' });
     }
 
-    res.clearCookie(env.SESSION_NAME);
+    res.clearCookie(env.SESSION_NAME, {
+      httpOnly: true,
+      secure: env.NODE_ENV === 'production',
+      sameSite: env.NODE_ENV === 'production' ? 'none' : 'lax',
+      path: '/'
+    });
     return res.json({ message: 'Sesión cerrada' });
   });
 };
@@ -259,12 +295,11 @@ export const forgotPassword = async (req: Request, res: Response) => {
     await mg.messages.create(env.MAILGUN_DOMAIN, emailData);
 
     return res.status(200).json(genericResponse);
-  } catch (error: any) {
+  } catch (error: unknown) {
     console.error('forgotPassword error:', error);
 
     return res.status(500).json({
-      message: 'No se pudo procesar la recuperación de contraseña',
-      error: error?.message || 'Error desconocido'
+      message: 'No se pudo procesar la recuperación de contraseña'
     });
   }
 };

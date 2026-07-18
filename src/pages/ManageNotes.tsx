@@ -3,7 +3,7 @@ import toast, { Toaster } from "react-hot-toast";
 import CustomButton from "../components/CustomButton";
 import Pagination from "../components/Pagination";
 import { ROUTES } from '../routes'
-import { useBlog } from "../contexts/blog.context";
+import { useBlog } from '../hooks/useBlog';
 
 import { FaPlus, FaPencil, FaRegTrashCan } from "react-icons/fa6";
 import { FaCalendarAlt, FaSearch } from "react-icons/fa";

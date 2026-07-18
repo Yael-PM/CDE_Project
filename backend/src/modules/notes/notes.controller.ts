@@ -17,39 +17,79 @@ type NoteRow = RowDataPacket & {
   creation_date: string;
 };
 
+type PublicNoteRow = RowDataPacket & {
+  note_id: number;
+  note_title: string;
+  note_description: string;
+  image_reference: string;
+  url_reference: string;
+  creation_date: string;
+};
+
+type UploadedImage = {
+  secure_url: string;
+  public_id: string;
+};
+
+const parsePositiveInteger = (value: unknown, fallback: number, max?: number) => {
+  const parsed = Number(value);
+  if (!Number.isInteger(parsed) || parsed < 1) return fallback;
+  return max ? Math.min(parsed, max) : parsed;
+};
+
+const parseNoteId = (value: unknown) => {
+  const noteId = Number(Array.isArray(value) ? value[0] : value);
+  return Number.isInteger(noteId) && noteId > 0 ? noteId : null;
+};
+
+const isValidHttpUrl = (value: string) => {
+  try {
+    const url = new URL(value);
+    return url.protocol === 'http:' || url.protocol === 'https:';
+  } catch {
+    return false;
+  }
+};
+
+const removeCloudinaryImageSafely = async (publicId: string | null) => {
+  if (!publicId) return;
+
+  try {
+    await deleteImageFromCloudinary(publicId);
+  } catch (error) {
+    console.error(`No se pudo eliminar el asset ${publicId} de Cloudinary:`, error);
+  }
+};
+
 export const getNotes = async (req: Request, res: Response) => {
   try {
     const search = String(req.query.search || '').trim();
-    const page = Math.max(Number(req.query.page || 1), 1);
-    const limit = Math.min(Math.max(Number(req.query.limit || 10), 1), 20);
+    const page = parsePositiveInteger(req.query.page, 1);
+    const limit = parsePositiveInteger(req.query.limit, 10, 20);
     const offset = (page - 1) * limit;
 
-    // 1. Construir la consulta principal
     let query = `
-      SELECT note_id, user_id, note_title, note_description, image_reference,
-             cloudinary_public_id, url_reference, creation_date
+      SELECT note_id, note_title, note_description, image_reference,
+             url_reference, creation_date
       FROM note
     `;
-
-    const params: any[] = [];
+    const params: string[] = [];
 
     if (search) {
-      query += ` WHERE note_title LIKE ? `;
-      params.push(`%${search}%`);
+      query += ' WHERE note_title LIKE ? OR note_description LIKE ? ';
+      params.push(`%${search}%`, `%${search}%`);
     }
 
-    // CONCATENAMOS limit y offset directamente para evitar el bug de mysql2 preparado
     query += ` ORDER BY creation_date DESC LIMIT ${limit} OFFSET ${offset}`;
 
-    // Ahora pasamos solo los parámetros del WHERE (si existen)
-    const [rows] = await pool.execute<NoteRow[]>(query, params);
+    const [rows] = await pool.execute<PublicNoteRow[]>(query, params);
 
-    let countQuery = `SELECT COUNT(*) AS total FROM note`;
-    const countParams: any[] = [];
+    let countQuery = 'SELECT COUNT(*) AS total FROM note';
+    const countParams: string[] = [];
 
     if (search) {
-      countQuery += ` WHERE note_title LIKE ?`;
-      countParams.push(`%${search}%`);
+      countQuery += ' WHERE note_title LIKE ? OR note_description LIKE ?';
+      countParams.push(`%${search}%`, `%${search}%`);
     }
 
     const [countRows] = await pool.execute<RowDataPacket[]>(countQuery, countParams);
@@ -72,11 +112,15 @@ export const getNotes = async (req: Request, res: Response) => {
 
 export const getNoteById = async (req: Request, res: Response) => {
   try {
-    const noteId = Number(req.params.id);
+    const noteId = parseNoteId(req.params.id);
 
-    const [rows] = await pool.execute<NoteRow[]>(
-      `SELECT note_id, user_id, note_title, note_description, image_reference,
-              cloudinary_public_id, url_reference, creation_date
+    if (!noteId) {
+      return res.status(400).json({ message: 'Identificador de nota inválido' });
+    }
+
+    const [rows] = await pool.execute<PublicNoteRow[]>(
+      `SELECT note_id, note_title, note_description, image_reference,
+              url_reference, creation_date
        FROM note
        WHERE note_id = ?
        LIMIT 1`,
@@ -97,25 +141,29 @@ export const getNoteById = async (req: Request, res: Response) => {
 };
 
 export const createNote = async (req: Request, res: Response) => {
+  let uploaded: UploadedImage | null = null;
+
   try {
     const userId = req.session.user!.userId;
-    const note_title = String(req.body.note_title || '').trim();
-    const note_description = String(req.body.note_description || '').trim();
-    const url_reference = String(req.body.url_reference || '').trim();
+    const noteTitle = String(req.body.note_title || '').trim();
+    const noteDescription = String(req.body.note_description || '').trim();
+    const urlReference = String(req.body.url_reference || '').trim();
 
-    if (!note_title || !note_description || !url_reference) {
+    if (!noteTitle || !noteDescription || !urlReference) {
       return res.status(400).json({
         message: 'Título, descripción y URL son obligatorios'
       });
     }
 
-    if (!req.file) {
-      return res.status(400).json({
-        message: 'La imagen es obligatoria'
-      });
+    if (!isValidHttpUrl(urlReference)) {
+      return res.status(400).json({ message: 'La URL de referencia no es válida' });
     }
 
-    const uploaded = await uploadImageToCloudinary(req.file.buffer);
+    if (!req.file) {
+      return res.status(400).json({ message: 'La imagen es obligatoria' });
+    }
+
+    uploaded = await uploadImageToCloudinary(req.file.buffer);
 
     const [result] = await pool.execute<ResultSetHeader>(
       `INSERT INTO note
@@ -123,11 +171,11 @@ export const createNote = async (req: Request, res: Response) => {
        VALUES (?, ?, ?, ?, ?, ?)`,
       [
         userId,
-        note_title,
-        note_description,
+        noteTitle,
+        noteDescription,
         uploaded.secure_url,
         uploaded.public_id,
-        url_reference
+        urlReference
       ]
     );
 
@@ -137,19 +185,26 @@ export const createNote = async (req: Request, res: Response) => {
       imageUrl: uploaded.secure_url
     });
   } catch (error) {
+    if (uploaded) await removeCloudinaryImageSafely(uploaded.public_id);
     console.error('createNote error:', error);
     return res.status(500).json({ message: 'Error al crear la nota' });
   }
 };
 
 export const updateNote = async (req: Request, res: Response) => {
+  let uploaded: UploadedImage | null = null;
+  let databaseUpdated = false;
+
   try {
-    const userId = req.session.user!.userId;
-    const noteId = Number(req.params.id);
+    const noteId = parseNoteId(req.params.id);
+
+    if (!noteId) {
+      return res.status(400).json({ message: 'Identificador de nota inválido' });
+    }
 
     const [rows] = await pool.execute<NoteRow[]>(
-      `SELECT * FROM note WHERE note_id = ? AND user_id = ? LIMIT 1`,
-      [noteId, userId]
+      'SELECT * FROM note WHERE note_id = ? LIMIT 1',
+      [noteId]
     );
 
     const note = rows[0];
@@ -158,41 +213,61 @@ export const updateNote = async (req: Request, res: Response) => {
       return res.status(404).json({ message: 'Nota no encontrada' });
     }
 
-    const note_title = String(req.body.note_title || note.note_title).trim();
-    const note_description = String(req.body.note_description || note.note_description).trim();
-    const url_reference = String(req.body.url_reference || note.url_reference).trim();
+    const noteTitle = req.body.note_title === undefined
+      ? note.note_title
+      : String(req.body.note_title).trim();
+    const noteDescription = req.body.note_description === undefined
+      ? note.note_description
+      : String(req.body.note_description).trim();
+    const urlReference = req.body.url_reference === undefined
+      ? note.url_reference
+      : String(req.body.url_reference).trim();
 
-    let image_reference = note.image_reference;
-    let cloudinary_public_id = note.cloudinary_public_id;
-
-    if (req.file) {
-      const uploaded = await uploadImageToCloudinary(req.file.buffer);
-
-      if (note.cloudinary_public_id) {
-        await deleteImageFromCloudinary(note.cloudinary_public_id);
-      }
-
-      image_reference = uploaded.secure_url;
-      cloudinary_public_id = uploaded.public_id;
+    if (!noteTitle || !noteDescription || !urlReference) {
+      return res.status(400).json({
+        message: 'Título, descripción y URL son obligatorios'
+      });
     }
 
-    await pool.execute(
+    if (!isValidHttpUrl(urlReference)) {
+      return res.status(400).json({ message: 'La URL de referencia no es válida' });
+    }
+
+    if (req.file) {
+      uploaded = await uploadImageToCloudinary(req.file.buffer);
+    }
+
+    const imageReference = uploaded?.secure_url || note.image_reference;
+    const cloudinaryPublicId = uploaded?.public_id || note.cloudinary_public_id;
+
+    await pool.execute<ResultSetHeader>(
       `UPDATE note
-       SET note_title = ?, note_description = ?, image_reference = ?, cloudinary_public_id = ?, url_reference = ?
-       WHERE note_id = ? AND user_id = ?`,
+       SET note_title = ?, note_description = ?, image_reference = ?,
+           cloudinary_public_id = ?, url_reference = ?
+       WHERE note_id = ?`,
       [
-        note_title,
-        note_description,
-        image_reference,
-        cloudinary_public_id,
-        url_reference,
-        noteId,
-        userId
+        noteTitle,
+        noteDescription,
+        imageReference,
+        cloudinaryPublicId,
+        urlReference,
+        noteId
       ]
     );
+    databaseUpdated = true;
 
-    return res.json({ message: 'Nota actualizada correctamente' });
+    if (uploaded && note.cloudinary_public_id !== uploaded.public_id) {
+      await removeCloudinaryImageSafely(note.cloudinary_public_id);
+    }
+
+    return res.json({
+      message: 'Nota actualizada correctamente',
+      imageUrl: imageReference
+    });
   } catch (error) {
+    if (uploaded && !databaseUpdated) {
+      await removeCloudinaryImageSafely(uploaded.public_id);
+    }
     console.error('updateNote error:', error);
     return res.status(500).json({ message: 'Error al actualizar la nota' });
   }
@@ -200,12 +275,15 @@ export const updateNote = async (req: Request, res: Response) => {
 
 export const deleteNote = async (req: Request, res: Response) => {
   try {
-    const userId = req.session.user!.userId;
-    const noteId = Number(req.params.id);
+    const noteId = parseNoteId(req.params.id);
+
+    if (!noteId) {
+      return res.status(400).json({ message: 'Identificador de nota inválido' });
+    }
 
     const [rows] = await pool.execute<NoteRow[]>(
-      `SELECT * FROM note WHERE note_id = ? AND user_id = ? LIMIT 1`,
-      [noteId, userId]
+      'SELECT * FROM note WHERE note_id = ? LIMIT 1',
+      [noteId]
     );
 
     const note = rows[0];
@@ -214,14 +292,8 @@ export const deleteNote = async (req: Request, res: Response) => {
       return res.status(404).json({ message: 'Nota no encontrada' });
     }
 
-    if (note.cloudinary_public_id) {
-      await deleteImageFromCloudinary(note.cloudinary_public_id);
-    }
-
-    await pool.execute(
-      `DELETE FROM note WHERE note_id = ? AND user_id = ?`,
-      [noteId, userId]
-    );
+    await pool.execute<ResultSetHeader>('DELETE FROM note WHERE note_id = ?', [noteId]);
+    await removeCloudinaryImageSafely(note.cloudinary_public_id);
 
     return res.json({ message: 'Nota eliminada correctamente' });
   } catch (error) {

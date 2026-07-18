@@ -1,6 +1,6 @@
 import { useState, useMemo } from 'react';
 import { notesService } from '../services/notes.service';
-import { useBlog } from '../contexts/blog.context';
+import { useBlog } from './useBlog';
 import type { Note } from '../types/notes.types';
 
 export const useFetchNotes = () => {
@@ -73,8 +73,8 @@ export const useEditNote = () => {
         try {
             const result = await notesService.editNote(id, formData);
             return result; 
-        } catch (err: any) {
-            setError(err.message || 'Error al editar la nota');
+        } catch (err: unknown) {
+            setError(err instanceof Error ? err.message : 'Error al editar la nota');
             return null;
         } finally {
             setLoading(false);

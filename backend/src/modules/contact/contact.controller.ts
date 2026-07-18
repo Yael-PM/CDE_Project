@@ -15,7 +15,7 @@ export const sendContactMessage = async (req: Request, res: Response) => {
     const position = String(req.body.position || '').trim();
     const subject = String(req.body.subject || '').trim();
     const message = String(req.body.message || '').trim();
-    const privacyAccepted = Boolean(req.body.privacyAccepted);
+    const privacyAccepted = req.body.privacyAccepted === true;
 
     if (!fullName || !company || !corporateEmail || !position || !subject || !message) {
       return res.status(400).json({
@@ -144,17 +144,16 @@ export const sendContactMessage = async (req: Request, res: Response) => {
         'h:Reply-To': corporateEmail
     };
 
-    const result = await mg.messages.create(env.MAILGUN_DOMAIN, emailData);
+    await mg.messages.create(env.MAILGUN_DOMAIN, emailData);
 
     return res.status(200).json({
       message: 'Mensaje enviado correctamente',
     });
-  } catch (error: any) {
+  } catch (error: unknown) {
     console.error('Mailgun send error:', error);
 
     return res.status(500).json({
-      message: 'No se pudo enviar el mensaje',
-      error: error?.message || 'Error desconocido'
+      message: 'No se pudo enviar el mensaje'
     });
   }
 };

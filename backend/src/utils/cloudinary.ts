@@ -12,7 +12,10 @@ export const uploadImageToCloudinary = (
     const uploadStream = cloudinary.uploader.upload_stream(
       {
         folder,
-        resource_type: 'image'
+        resource_type: 'image',
+        allowed_formats: ['jpg', 'jpeg', 'png', 'webp'],
+        overwrite: false,
+        use_filename: false
       },
       (error, result) => {
         if (error || !result) {
@@ -32,5 +35,8 @@ export const uploadImageToCloudinary = (
 
 export const deleteImageFromCloudinary = async (publicId: string) => {
   if (!publicId) return;
-  await cloudinary.uploader.destroy(publicId);
+  return cloudinary.uploader.destroy(publicId, {
+    resource_type: 'image',
+    invalidate: true
+  });
 };

@@ -16,8 +16,8 @@ export const useContact = () => {
       await contactService.sendContactMessage(formData);
       setContactSuccess(true);
       return true; // Retorna true si todo salió bien
-    } catch (err: any) {
-      setContactError(err.message || 'Ocurrió un error inesperado');
+    } catch (err: unknown) {
+      setContactError(err instanceof Error ? err.message : 'Ocurrió un error inesperado');
       return false;
     } finally {
       setIsSending(false);
