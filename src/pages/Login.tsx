@@ -71,6 +71,10 @@ const Login = () => {
                             <input 
                                 name="password"
                                 type="password" 
+                                pattern="[a-zA-Z0-9]+" // Solo alfanumérico
+                                onChange={(e) => {
+                                    e.target.value = e.target.value.replace(/[^a-zA-Z0-9]/g, '')
+                                }}
                                 required
                                 disabled={loading}
                                 placeholder="Contraseña" 

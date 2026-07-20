@@ -10,15 +10,26 @@ const ForgotPassword = () => {
     // 1. Ahora extraemos requestPasswordReset y 'loading' directamente de tu hook
     const { requestPasswordReset, loading } = useAuth() 
     const [emailSent, setEmailSent] = useState(false)
+    const [email, setEmail] = useState('')
+    // Regex que valida el formato final del email al enviar
+    const emailRegex = /^[a-zA-Z0-9._%+-]+@[a-zA-Z0-9.-]+\.[a-zA-Z]{2,}$/
+
+    const handleEmailChange = (e: React.ChangeEvent<HTMLInputElement>) => {
+        // Sanitiza en tiempo real: remueve caracteres especiales inválidos
+        const sanitized = e.target.value.replace(/[^a-zA-Z0-9@._-]/g, '')
+        setEmail(sanitized)
+    }
 
     const handleSubmit = async (e: React.FormEvent<HTMLFormElement>) => {
         e.preventDefault()
-        
-        const formData = new FormData(e.currentTarget)
-        const email = formData.get('email') as string
+
+        if (!emailRegex.test(email)) {
+            toast.error('Por favor ingresa un correo electrónico válido');
+            return;
+        }
 
         try {
-            await requestPasswordReset(email) // El hook ya cambia el estado de 'loading'
+            await requestPasswordReset(email)
             setEmailSent(true)
             toast.success('Correo de recuperación enviado', {
                 style: { borderRadius: '12px', background: '#333', color: '#fff' }
@@ -65,6 +76,7 @@ const ForgotPassword = () => {
                                         type="email" 
                                         required
                                         disabled={loading}
+                                        onChange={handleEmailChange}
                                         placeholder="Ingresa tu correo" 
                                         className="w-full p-3 rounded-xl border border-gray-300 shadow-inner focus:outline-none focus:ring-2 focus:ring-cyan-400 transition-all bg-gray-50/50 disabled:opacity-50"
                                     />

@@ -53,11 +53,17 @@ export const useCreateNote = () => {
   return { createNewNote, loading, error, success };
 };
 
-export const useEditNote = () => {
+export const useEditNote = (onSuccess?: () => void) => {
     const [isLoading, setLoading] = useState<boolean>(false);
     const [error, setError] = useState<string | null>(null);
 
-    const updateExistingNote = async (id: number, title: string, description: string, urlReference: string, imageFile?: File) => {
+    const updateExistingNote = async (
+        id: number, 
+        title: string, 
+        description: string, 
+        urlReference: string, 
+        imageFile?: File
+    ) => {
         setLoading(true);
         setError(null);
 
@@ -72,6 +78,10 @@ export const useEditNote = () => {
 
         try {
             const result = await notesService.editNote(id, formData);
+            if (result && onSuccess) {
+                // Dispara la actualización automáticamente al terminar
+                await onSuccess(); 
+            }
             return result; 
         } catch (err: unknown) {
             setError(err instanceof Error ? err.message : 'Error al editar la nota');

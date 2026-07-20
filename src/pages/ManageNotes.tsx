@@ -17,7 +17,7 @@ const NOTES_PER_PAGE = 5;
 
 const ManageNotes = () => {
     // 1. Extraemos toda la data y lógica del nuevo hook
-    const { notes, setNotes, loading, error } = useBlog();
+    const { notes, setNotes, loading, error, refetchNotes } = useBlog();
 
     const [currentPage, setCurrentPage] = useState<number>(1);
 
@@ -38,6 +38,7 @@ const ManageNotes = () => {
     // Hooks: editar y eliminar nota
     const { updateExistingNote, isUpdating } = useEditNote();
     const { deleteExistingNote, isDeleting } = useDeleteNote(); // deleteError se puede extraer si se necesita
+    
 
     // Estados para el Modal
     const [isModalOpen, setIsModalOpen] = useState<boolean>(false);
@@ -87,9 +88,25 @@ const ManageNotes = () => {
         );
 
         if (updatedData) {
-            setNotes((prevNotes) =>
-                prevNotes.map((n) => (n.note_id === selectedNote.note_id ? { ...n, note_title: editTitle } : n))
-            );
+            // Opción A: Refrescar la lista de notas desde el backend
+            if (refetchNotes) {
+                await refetchNotes();
+            } else {
+                // Opción B (Fallback en memoria): Reemplazamos la nota con la respuesta del backend
+                setNotes((prevNotes) =>
+                    prevNotes.map((n) =>
+                        n.note_id === selectedNote.note_id
+                            ? (typeof updatedData === 'object' ? updatedData : { 
+                                ...n, 
+                                note_title: editTitle, 
+                                note_description: editDescription, 
+                                url_reference: editUrl 
+                            })
+                            : n
+                    )
+                );
+            }
+
             setIsModalOpen(false);
             toast.success('Nota editada exitosamente.', {
                 style: {
@@ -332,8 +349,31 @@ const ManageNotes = () => {
                                             <div className="flex-1">
                                                 <input
                                                     type="file"
-                                                    accept="image/*"
-                                                    onChange={(e) => setEditImage(e.target.files?.[0])}
+                                                    // Restringimos los formatos en el navegador
+                                                    accept=".png, .jpg, .jpeg, image/png, image/jpeg"
+                                                    onChange={(e) => {
+                                                        const file = e.target.files?.[0];
+                                                        if (file) {
+                                                            // Formatos permitidos
+                                                            const allowedTypes = ["image/png", "image/jpeg", "image/jpg"];
+                                                            
+                                                            if (!allowedTypes.includes(file.type)) {
+                                                                toast.error("Formato no válido. Solo se permiten imágenes PNG, JPG o JPEG.", {
+                                                                    style: {
+                                                                        borderRadius: '12px',
+                                                                        background: '#333',
+                                                                        color: '#fff',
+                                                                        fontFamily: 'sans-serif'
+                                                                    },
+                                                                });
+                                                                // Limpiamos el valor del input para que no conserve el archivo no permitido
+                                                                e.target.value = "";
+                                                                return;
+                                                            }
+                                                            
+                                                            setEditImage(file);
+                                                        }
+                                                    }}
                                                     className="w-full text-sm text-gray-500 file:mr-4 file:py-2 file:px-4 file:rounded-full file:border-0 file:text-sm file:font-semibold file:bg-blue-50 file:text-blue-700 hover:file:bg-blue-100"
                                                 />
                                                 {editImage && (
